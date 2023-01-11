@@ -5,30 +5,43 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static frc.robot.Constants.IntakeConstants.*;
+import static frc.robot.Constants.ElevatorConstants.*;
 
-public class IntakeSubsystem extends SubsystemBase {
-  /** Creates a new IntakeSubsystem. */
-  CANSparkMax intake = new CANSparkMax(kIntakePort, MotorType.kBrushless);
+public class ElevatorSubsystem extends SubsystemBase {
   
-  public IntakeSubsystem() {}
+  CANSparkMax[] elevatorMotors = new CANSparkMax[] {
+    new CANSparkMax(kElevatorPorts[0], MotorType.kBrushless),
+    new CANSparkMax(kElevatorPorts[1], MotorType.kBrushless)
+  };
+
+  double position;
+  
+  /** Creates a new ElevatorSubsystem. */
+  public ElevatorSubsystem() {
+    elevatorMotors[0].getPIDController().setFeedbackDevice(elevatorMotors[0].getAbsoluteEncoder(Type.kDutyCycle));
+    elevatorMotors[1].follow(elevatorMotors[0], true);
+    position = 0;
+  }
 
   /**
    * Example command factory method.
    *
    * @return a command
    */
-  public CommandBase intake() {
+  public CommandBase move(double value) {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
         () -> {
           /* one-time action goes here */
-          intake.set(kIntakeSpeed);
+          position += value;
+          elevatorMotors[0].getPIDController().setReference(position, ControlType.kPosition);
         });
   }
 

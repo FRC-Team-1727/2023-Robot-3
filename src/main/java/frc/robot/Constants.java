@@ -123,4 +123,14 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
+
+  public static final class IntakeConstants {
+    public static final int kIntakePort = 1;
+    public static final double kIntakeSpeed = 1;
+  }
+
+  public static final class ElevatorConstants {
+    public static final int[] kElevatorPorts = {3,4};
+    public static final double kElevatorSpeed = 1;
+  }
 }
