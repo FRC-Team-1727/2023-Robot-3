@@ -45,6 +45,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         });
   }
 
+  public CommandBase movePosition(int position) {
+    return runOnce(
+      () -> {
+        this.position = kElevatorPositions[position];
+      });
+  }
+
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *

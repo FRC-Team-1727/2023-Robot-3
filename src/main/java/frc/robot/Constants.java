@@ -106,7 +106,7 @@ public final class Constants {
   }
 
   public static final class OIConstants {
-    public static final int kDriverControllerPort = 5;
+    public static final int kDriverControllerPort = 4;
   }
 
   public static final class AutoConstants {
@@ -132,5 +132,11 @@ public final class Constants {
   public static final class ElevatorConstants {
     public static final int[] kElevatorPorts = {9,10};
     public static final double kElevatorSpeed = 1;
+    public static final int[] kElevatorPositions = {
+      /* zero/default */ 0,
+      /* first position */ 10,
+      /* second stage */ 20,
+      /* third stage */ 30
+    };
   }
 }
