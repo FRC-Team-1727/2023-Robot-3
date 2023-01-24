@@ -9,24 +9,31 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ElevatorConstants.*;
 
 public class ElevatorSubsystem extends SubsystemBase {
   
-  CANSparkMax[] elevatorMotors = new CANSparkMax[] {
+  private CANSparkMax[] elevatorMotors = new CANSparkMax[] {
     new CANSparkMax(kElevatorPorts[0], MotorType.kBrushless),
     new CANSparkMax(kElevatorPorts[1], MotorType.kBrushless)
   };
 
-  double position;
+  private CANSparkMax angler = new CANSparkMax(kAnglerPort, MotorType.kBrushless);
+
+  private double position;
+  private double angle;
   
   /** Creates a new ElevatorSubsystem. */
   public ElevatorSubsystem() {
     elevatorMotors[0].getPIDController().setFeedbackDevice(elevatorMotors[0].getAbsoluteEncoder(Type.kDutyCycle));
     elevatorMotors[1].follow(elevatorMotors[0], true);
+    angler.getPIDController().setFeedbackDevice(angler.getAbsoluteEncoder(Type.kDutyCycle));
     position = 0;
+    angle = 0;
   }
 
   /**
@@ -49,6 +56,24 @@ public class ElevatorSubsystem extends SubsystemBase {
     return runOnce(
       () -> {
         this.position = kElevatorPositions[position];
+      });
+  }
+
+  public CommandBase moveAngle(double value) {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return runOnce(
+        () -> {
+          /* one-time action goes here */
+          angle += value;
+          angler.getPIDController().setReference(angle, ControlType.kPosition);
+        });
+  }
+
+  public CommandBase setAnglePosition(int position) {
+    return runOnce(
+      () -> {
+        angle = kAnglerPositions[position];
       });
   }
 
