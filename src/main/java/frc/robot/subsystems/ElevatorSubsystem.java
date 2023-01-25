@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ElevatorConstants.*;
 
@@ -62,12 +63,13 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public CommandBase changePosition() {
-    position++;
-    if (position >= kElevatorPositions.length) {
-      position = 1;
-    }
-
-    return setPosition(position);
+    return runOnce(
+      () -> {
+        position++;
+        if (position >= kElevatorPositions.length) {
+          position = 1;
+        }
+      }).andThen(setPosition(position));
   }
 
   public CommandBase moveAngle(double value) {
