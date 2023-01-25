@@ -22,15 +22,17 @@ public class IntakeSubsystem extends SubsystemBase {
    *
    * @return a command
    */
-  public CommandBase intake() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-          intake.set(kIntakeSpeed);
-        });
-  }
+  
+   public void intake(double rt, double lt) {
+      if (rt > 0.1) {
+        intake.set(kIntakeSpeed * rt);
+      } else if (lt > 0.1) {
+        intake.set(kOuttakeSpeed * lt);
+      } else {
+        intake.stopMotor();
+      }
+   }
+  
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).

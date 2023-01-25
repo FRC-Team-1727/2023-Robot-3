@@ -63,6 +63,13 @@ public class RobotContainer {
                 MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.06),
                 false),
             m_robotDrive));
+
+    m_intakeSubsystem.setDefaultCommand(
+        new RunCommand(
+            () -> m_intakeSubsystem.intake(
+                m_driverController.getRightTriggerAxis(),
+                m_driverController.getLeftTriggerAxis()),
+            m_intakeSubsystem));
   }
 
   /**
@@ -82,12 +89,17 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    m_driverController.rightBumper()
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
+    m_driverController.rightTrigger().whileTrue(m_elevatorSubsystem.moveAngle(0));
+    m_driverController.rightBumper().onTrue(m_elevatorSubsystem.setAnglePosition(1));
+    m_driverController.leftBumper().onTrue(m_elevatorSubsystem.changePosition());
+    m_driverController.leftTrigger().whileTrue(m_elevatorSubsystem.move(-m_driverController.getLeftTriggerAxis()));
 
-    m_driverController.rightTrigger().whileTrue(m_intakeSubsystem.intake());
+    /*tentative controls
+     * RT - intake position down (angle horizontal, elevator out some) - also runs intake
+     * RB - elevator up
+     * LB - toggle elevator extension (close/far)
+     * LT - outtake/retract elevator
+     */
   }
 
   /**

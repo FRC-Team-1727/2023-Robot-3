@@ -127,21 +127,23 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int kIntakePort = 11;
     public static final double kIntakeSpeed = 1;
+    public static final double kOuttakeSpeed = -1;
   }
 
   public static final class ElevatorConstants {
-    public static final int[] kElevatorPorts = {9,10};
-    public static final int kAnglerPort = 12;
-    public static final double kElevatorSpeed = 1;
+    public static final int kElevatorPort = 9;
+    public static final int kAnglerPort = 10;
+    public static final double kElevatorSpeed = 0.1;
     public static final int[] kElevatorPositions = {
       /* zero/default */ 0,
-      /* first position */ 10,
-      /* second stage */ 20,
-      /* third stage */ 30
+      /* intaking */ 3,
+      /* second stage */ 6,
+      /* third stage */ 9
     };
     public static final int[] kAnglerPositions = {
-      /* zero/default */ 0,
-      /* up */ 10
+      /* starting position */ 6,
+      /* zero/horizontal */ 0,
+      /* up */ 3,
     };
   }
 }

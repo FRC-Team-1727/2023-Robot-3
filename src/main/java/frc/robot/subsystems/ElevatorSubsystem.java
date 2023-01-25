@@ -15,23 +15,22 @@ import static frc.robot.Constants.ElevatorConstants.*;
 
 public class ElevatorSubsystem extends SubsystemBase {
   
-  private CANSparkMax[] elevatorMotors = new CANSparkMax[] {
-    new CANSparkMax(kElevatorPorts[0], MotorType.kBrushless),
-    new CANSparkMax(kElevatorPorts[1], MotorType.kBrushless)
-  };
-
+  private CANSparkMax elevatorMotor = new CANSparkMax(kElevatorPort, MotorType.kBrushless);
   private CANSparkMax angler = new CANSparkMax(kAnglerPort, MotorType.kBrushless);
 
-  private double position;
+  private double elevation;
   private double angle;
+  private int position;
+  private int anglePosition;
   
   /** Creates a new ElevatorSubsystem. */
   public ElevatorSubsystem() {
-    elevatorMotors[0].getPIDController().setFeedbackDevice(elevatorMotors[0].getAbsoluteEncoder(Type.kDutyCycle));
-    elevatorMotors[1].follow(elevatorMotors[0], true);
+    elevatorMotor.getPIDController().setFeedbackDevice(elevatorMotor.getAbsoluteEncoder(Type.kDutyCycle));
     angler.getPIDController().setFeedbackDevice(angler.getAbsoluteEncoder(Type.kDutyCycle));
-    position = 0;
+    elevation = 0;
     angle = 0;
+    position = 0;
+    anglePosition = 2;
   }
 
   /**
@@ -39,22 +38,36 @@ public class ElevatorSubsystem extends SubsystemBase {
    *
    * @return a command
    */
-  public CommandBase move(double value) {
+  private void moveToElevation() {
+    elevatorMotor.getPIDController().setReference(elevation - angle, ControlType.kPosition);
+  }
+  
+   public CommandBase move(double value) {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
         () -> {
           /* one-time action goes here */
-          position += value;
-          elevatorMotors[0].getPIDController().setReference(position, ControlType.kPosition);
+          elevation += value * kElevatorSpeed;
+          moveToElevation();
         });
   }
 
-  public CommandBase movePosition(int position) {
+  public CommandBase setPosition(int position) {
     return runOnce(
       () -> {
-        this.position = kElevatorPositions[position];
+        this.elevation = kElevatorPositions[position];
+        moveToElevation();
       });
+  }
+
+  public CommandBase changePosition() {
+    position++;
+    if (position >= kElevatorPositions.length) {
+      position = 1;
+    }
+
+    return setPosition(position);
   }
 
   public CommandBase moveAngle(double value) {
@@ -72,6 +85,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     return runOnce(
       () -> {
         angle = kAnglerPositions[position];
+        anglePosition = position;
+        angler.getPIDController().setReference(angle, ControlType.kPosition);
       });
   }
 
