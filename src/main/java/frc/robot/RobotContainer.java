@@ -65,11 +65,16 @@ public class RobotContainer {
             m_robotDrive));
 
     m_intakeSubsystem.setDefaultCommand(
+        // intake with right trigger
+        // outtake with left trigger
         new RunCommand(
             () -> m_intakeSubsystem.intake(
                 m_driverController.getRightTriggerAxis(),
                 m_driverController.getLeftTriggerAxis()),
             m_intakeSubsystem));
+
+    //updates elevator position based on angle
+    m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.updateElevation());
   }
 
   /**

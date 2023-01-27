@@ -39,8 +39,12 @@ public class ElevatorSubsystem extends SubsystemBase {
    *
    * @return a command
    */
-  private void moveToElevation() {
-    elevatorMotor.getPIDController().setReference(elevation - angle, ControlType.kPosition);
+
+  public CommandBase updateElevation() {
+    return runOnce(
+      () -> {
+        elevatorMotor.getPIDController().setReference(elevation - angle, ControlType.kPosition);
+      });
   }
   
    public CommandBase move(double value) {
@@ -50,7 +54,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         () -> {
           /* one-time action goes here */
           elevation += value * kElevatorSpeed;
-          moveToElevation();
         });
   }
 
@@ -58,7 +61,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     return runOnce(
       () -> {
         this.elevation = kElevatorPositions[position];
-        moveToElevation();
       });
   }
 
