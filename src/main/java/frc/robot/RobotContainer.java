@@ -9,6 +9,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -40,7 +41,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+//   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -64,17 +65,25 @@ public class RobotContainer {
                 false),
             m_robotDrive));
 
-    m_intakeSubsystem.setDefaultCommand(
-        // intake with right trigger
-        // outtake with left trigger
-        new RunCommand(
-            () -> m_intakeSubsystem.intake(
-                m_driverController.getRightTriggerAxis(),
-                m_driverController.getLeftTriggerAxis()),
-            m_intakeSubsystem));
+    // m_intakeSubsystem.setDefaultCommand(
+    //     // intake with right trigger
+    //     // outtake with left trigger
+    //     new RunCommand(
+    //         () -> m_intakeSubsystem.intake(
+    //             m_driverController.getRightTriggerAxis(),
+    //             m_driverController.getLeftTriggerAxis()),
+    //         m_intakeSubsystem));
 
     //updates elevator position based on angle
     m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.updateElevation());
+    // m_elevatorSubsystem.setDefaultCommand(
+    //     new RunCommand(
+    //         () -> m_elevatorSubsystem.manualControl(
+    //             m_driverController.leftTrigger().getAsBoolean(),
+    //             m_driverController.leftBumper().getAsBoolean(),
+    //             m_driverController.rightTrigger().getAsBoolean(),
+    //             m_driverController.rightBumper().getAsBoolean()), m_elevatorSubsystem)
+    // );
   }
 
   /**
@@ -94,10 +103,12 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    m_driverController.rightTrigger().whileTrue(m_elevatorSubsystem.moveAngle(0));
-    m_driverController.rightBumper().onTrue(m_elevatorSubsystem.setAnglePosition(1));
+    
+    m_driverController.rightTrigger().onTrue(m_elevatorSubsystem.intakePosition());
+    m_driverController.rightBumper().onTrue(m_elevatorSubsystem.setAnglePosition(() -> 2));
     m_driverController.leftBumper().onTrue(m_elevatorSubsystem.changePosition());
-    m_driverController.leftTrigger().whileTrue(m_elevatorSubsystem.move(-m_driverController.getLeftTriggerAxis()));
+    // m_driverController.leftTrigger().whileTrue(new OuttakeCommand(m_elevatorSubsystem, () -> -m_driverController.getLeftTriggerAxis()));
+    m_driverController.a().onTrue(m_elevatorSubsystem.zeroEncoders());
 
     /*tentative controls
      * RT - intake position down (angle horizontal, elevator out some) - also runs intake
