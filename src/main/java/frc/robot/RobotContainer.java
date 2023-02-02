@@ -27,6 +27,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -107,7 +108,7 @@ public class RobotContainer {
     m_driverController.rightTrigger().onTrue(m_elevatorSubsystem.intakePosition());
     m_driverController.rightBumper().onTrue(m_elevatorSubsystem.setAnglePosition(() -> 2));
     m_driverController.leftBumper().onTrue(m_elevatorSubsystem.changePosition());
-    // m_driverController.leftTrigger().whileTrue(new OuttakeCommand(m_elevatorSubsystem, () -> -m_driverController.getLeftTriggerAxis()));
+    m_driverController.leftTrigger().whileTrue(new OuttakeCommand(m_elevatorSubsystem, () -> -m_driverController.getLeftTriggerAxis()));
     m_driverController.a().onTrue(m_elevatorSubsystem.zeroEncoders());
 
     /*tentative controls

@@ -137,13 +137,13 @@ public final class Constants {
     public static final int[] kElevatorPositions = {
       /* zero/default */ 0,
       /* intaking */ 10,
-      /* second stage */ 80,
-      /* third stage */ 160
+      /* second stage */ 90,
+      /* third stage */ 170
     };
     public static final double[] kAnglerPositions = {
       /* starting position */ 0,
       /* zero/horizontal */ 0,
-      /* up */ 1.6, //1.3
+      /* up */ 1.3, //1.3
     };
     
     //angler motor to angle ratio : 240:1

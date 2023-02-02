@@ -35,13 +35,18 @@ public class OuttakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.move(-speed.getAsDouble());
+    m_subsystem.move(speed.getAsDouble());
     m_subsystem.moveAngle(-speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_subsystem.move(0);
+    m_subsystem.setElevationAsIs();
+    m_subsystem.moveAngle(0);
+    m_subsystem.setAngleAsIs();
+  }
 
   // Returns true when the command should end.
   @Override

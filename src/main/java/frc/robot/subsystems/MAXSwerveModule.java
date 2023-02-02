@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 
@@ -154,11 +155,24 @@ public class MAXSwerveModule {
     m_drivingPIDController.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
     m_turningPIDController.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
 
+    if (Math.abs(optimizedDesiredState.angle.getRadians() - m_turningEncoder.getPosition()) <= 0.1) {
+      m_turningPIDController.setReference(0, ControlType.kDutyCycle);
+    }
+
+
     m_desiredState = desiredState;
   }
 
   /** Zeroes all the SwerveModule encoders. */
   public void resetEncoders() {
     m_drivingEncoder.setPosition(0);
+  }
+
+  public double getEncoderValue() {
+    return m_turningEncoder.getPosition();
+  }
+
+  public double getCurTurningSpeed() {
+    return m_turningSparkMax.get();
   }
 }

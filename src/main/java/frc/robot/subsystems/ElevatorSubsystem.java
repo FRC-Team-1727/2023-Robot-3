@@ -13,6 +13,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ElevatorConstants.*;
 
@@ -72,12 +73,14 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
   
   public void move(double value) {
-    elevation += value * kElevatorSpeed;
+    // elevation += value * kElevatorSpeed;
+    elevatorMotor.set(value * 0.1);
   }
 
   public CommandBase setPosition(IntSupplier position) {
     return runOnce(
       () -> {
+        this.position = position.getAsInt();
         this.elevation = kElevatorPositions[position.getAsInt()];
         System.out.println("setting position" + " " + elevation + " " + position);
       });
@@ -94,8 +97,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void moveAngle(double value) {
-    angle += value;
-    angler.getPIDController().setReference(-angle, ControlType.kPosition);
+    // angle += value;
+    // angler.getPIDController().setReference(-angle, ControlType.kPosition);
+    angler.set(value * 0.05);
   }
 
   public CommandBase setAnglePosition(IntSupplier position) {
@@ -137,6 +141,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     } else {
       angler.stopMotor();
     }
+  }
+
+  public void setElevationAsIs() {
+    elevation = elevatorMotor.getEncoder().getPosition();
+  }
+
+  public void setAngleAsIs() {
+    angle = kAnglerPositions[anglePosition];
+        angler.getPIDController().setReference(-angle, ControlType.kPosition);
   }
 
   /**
