@@ -32,28 +32,32 @@ public class ElevatorSubsystem extends SubsystemBase {
   
   /** Creates a new ElevatorSubsystem. */
   public ElevatorSubsystem() {
-    // elevatorMotor.getPIDController().setFeedbackDevice(elevatorMotor.getAbsoluteEncoder(Type.kDutyCycle));
-    // angler.getPIDController().setFeedbackDevice(angler.getAbsoluteEncoder(Type.kDutyCycle));
+    angler.getPIDController().setFeedbackDevice(angler.getAbsoluteEncoder(Type.kDutyCycle));
     elevatorMotor.getPIDController().setFeedbackDevice(elevatorMotor.getEncoder());
-    angler.getPIDController().setFeedbackDevice(angler.getEncoder());
+    // angler.getPIDController().setFeedbackDevice(angler.getEncoder());
     elevation = 0;
     angle = 0;
     position = 0;
     anglePosition = 2;
 
-    elevatorMotor.getPIDController().setP(1);
+    elevatorMotor.getPIDController().setP(0.1);
     elevatorMotor.getPIDController().setI(0);
-    elevatorMotor.getPIDController().setD(0);
+    elevatorMotor.getPIDController().setD(0.1);
+    elevatorMotor.getPIDController().setFF(0);
     angler.getPIDController().setP(1);
     angler.getPIDController().setI(0);
-    angler.getPIDController().setD(0);
+    angler.getPIDController().setD(0.1);
+    angler.getPIDController().setFF(0);
+    angler.setInverted(true);
 
-    elevatorMotor.getPIDController().setOutputRange(-0.25, 0.25);
-    angler.getPIDController().setOutputRange(-0.25, 0.25);
+    angler.getAbsoluteEncoder(Type.kDutyCycle).setZeroOffset(0.7);
+
+    elevatorMotor.getPIDController().setOutputRange(-0.75, 0.75);
+    angler.getPIDController().setOutputRange(-1, 1);
 
 
     elevatorMotor.setIdleMode(IdleMode.kCoast);
-    angler.setIdleMode(IdleMode.kBrake);
+    angler.setIdleMode(IdleMode.kCoast);
   }
 
   /**
@@ -74,7 +78,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   
   public void move(double value) {
     // elevation += value * kElevatorSpeed;
-    elevatorMotor.set(value * 0.1);
+    elevatorMotor.set(value * kElevatorSpeed);
   }
 
   public CommandBase setPosition(IntSupplier position) {
@@ -107,18 +111,22 @@ public class ElevatorSubsystem extends SubsystemBase {
       () -> {
         angle = kAnglerPositions[position.getAsInt()];
         anglePosition = position.getAsInt();
-        angler.getPIDController().setReference(-angle, ControlType.kPosition);
+        angler.getPIDController().setReference(angle, ControlType.kPosition);
         // System.out.println("setting angle");
       });
   }
 
-  public CommandBase zeroEncoders() {
-    return runOnce(
-      () -> {
-        elevatorMotor.getEncoder().setPosition(0);
-        angler.getEncoder().setPosition(0);
-      }
-    );
+  public void runLowVoltage() {
+    elevatorMotor.getPIDController().setReference(-1, ControlType.kVoltage);
+  }
+
+  public void zeroElevator() {
+    elevatorMotor.stopMotor();
+    elevatorMotor.getEncoder().setPosition(0);
+  }
+
+  public boolean elevatorStopped() {
+    return elevatorMotor.getEncoder().getVelocity() < 0.1;
   }
 
   public CommandBase intakePosition() {
@@ -149,7 +157,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void setAngleAsIs() {
     angle = kAnglerPositions[anglePosition];
-        angler.getPIDController().setReference(-angle, ControlType.kPosition);
+        angler.getPIDController().setReference(angle, ControlType.kPosition);
   }
 
   /**
@@ -166,7 +174,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("elevator encoder", elevatorMotor.getEncoder().getPosition());
-    SmartDashboard.putNumber("angler encoder", angler.getEncoder().getPosition());
+    SmartDashboard.putNumber("angler encoder", angler.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
+    SmartDashboard.putNumber("angler motor encoder", angler.getEncoder().getPosition());
     SmartDashboard.putNumber("elevator target", elevation);
     SmartDashboard.putNumber("angler target", angle);
   }

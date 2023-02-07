@@ -10,6 +10,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.OuttakeCommand;
+import frc.robot.commands.ZeroElevatorCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -77,6 +78,8 @@ public class RobotContainer {
 
     //updates elevator position based on angle
     m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.updateElevation());
+
+    //manual control for testing
     // m_elevatorSubsystem.setDefaultCommand(
     //     new RunCommand(
     //         () -> m_elevatorSubsystem.manualControl(
@@ -109,7 +112,7 @@ public class RobotContainer {
     m_driverController.rightBumper().onTrue(m_elevatorSubsystem.setAnglePosition(() -> 2));
     m_driverController.leftBumper().onTrue(m_elevatorSubsystem.changePosition());
     m_driverController.leftTrigger().whileTrue(new OuttakeCommand(m_elevatorSubsystem, () -> -m_driverController.getLeftTriggerAxis()));
-    m_driverController.a().onTrue(m_elevatorSubsystem.zeroEncoders());
+    m_driverController.a().onTrue(new ZeroElevatorCommand(m_elevatorSubsystem));
 
     /*tentative controls
      * RT - intake position down (angle horizontal, elevator out some) - also runs intake

@@ -5,52 +5,51 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.ElevatorSubsystem;
-
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class OuttakeCommand extends CommandBase {
+public class ZeroElevatorCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ElevatorSubsystem m_subsystem;
-  private final DoubleSupplier speed;
 
   /**
-   * Creates a new OuttakeCommand.
+   * Creates a new ZeroElevatorCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public OuttakeCommand(ElevatorSubsystem subsystem, DoubleSupplier lt) {
+  int stopTime;
+
+
+  public ZeroElevatorCommand(ElevatorSubsystem subsystem) {
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
-    speed = lt;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_subsystem.runLowVoltage();
+    stopTime = 0;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // m_subsystem.move(speed.getAsDouble());
-    m_subsystem.moveAngle(speed.getAsDouble());
+    if (m_subsystem.elevatorStopped()) {
+      stopTime++;
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.move(0);
-    m_subsystem.setElevationAsIs();
-    m_subsystem.moveAngle(0);
-    m_subsystem.setAngleAsIs();
+    m_subsystem.zeroElevator();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return stopTime > 50;
   }
 }
