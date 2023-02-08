@@ -45,7 +45,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorMotor.getPIDController().setD(0.1);
     elevatorMotor.getPIDController().setFF(0);
     angler.getPIDController().setP(1);
-    angler.getPIDController().setI(0);
+    angler.getPIDController().setI(0.0001);
     angler.getPIDController().setD(0.1);
     angler.getPIDController().setFF(0);
     angler.setInverted(true);
@@ -158,6 +158,15 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void setAngleAsIs() {
     angle = kAnglerPositions[anglePosition];
         angler.getPIDController().setReference(angle, ControlType.kPosition);
+  }
+
+  public CommandBase setAngle(DoubleSupplier angle) {
+    return runOnce(
+      () -> {
+        this.angle = angle.getAsDouble();
+        angler.getPIDController().setReference(this.angle, ControlType.kPosition);
+      }
+    );
   }
 
   /**

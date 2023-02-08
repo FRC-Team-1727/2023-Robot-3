@@ -110,7 +110,7 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxSpeedMetersPerSecond = 0.5; //3
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
@@ -143,7 +143,7 @@ public final class Constants {
     public static final double[] kAnglerPositions = {
       /* starting position */ .130,
       /* zero/horizontal */ 0.130,
-      /* up */ 0.46
+      /* up */ 0.4
     };
     
     //angler motor to angle ratio : 240:1
