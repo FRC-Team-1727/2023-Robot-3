@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.ElevatorSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
@@ -39,6 +40,7 @@ public class ZeroElevatorCommand extends CommandBase {
     if (m_subsystem.elevatorStopped()) {
       stopTime++;
     }
+    SmartDashboard.putNumber("zero stop time", stopTime);
   }
 
   // Called once the command ends or is interrupted.
@@ -50,6 +52,7 @@ public class ZeroElevatorCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return stopTime > 50;
+    return stopTime > 25;
+    // return false;
   }
 }

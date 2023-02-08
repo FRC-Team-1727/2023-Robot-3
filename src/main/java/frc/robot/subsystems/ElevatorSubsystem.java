@@ -122,11 +122,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void zeroElevator() {
     elevatorMotor.stopMotor();
-    elevatorMotor.getEncoder().setPosition(0);
+    elevatorMotor.getEncoder().setPosition(-3);
   }
 
   public boolean elevatorStopped() {
-    return elevatorMotor.getEncoder().getVelocity() < 0.1;
+    return Math.abs(elevatorMotor.getEncoder().getVelocity()) < 0.1;
   }
 
   public CommandBase intakePosition() {
@@ -178,6 +178,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("angler motor encoder", angler.getEncoder().getPosition());
     SmartDashboard.putNumber("elevator target", elevation);
     SmartDashboard.putNumber("angler target", angle);
+    SmartDashboard.putNumber("elevator voltage", elevatorMotor.getBusVoltage());
+    SmartDashboard.putNumber("elevator velocity", elevatorMotor.getEncoder().getVelocity());
+    SmartDashboard.putBoolean("elevator stopped", elevatorStopped());
   }
 
   @Override
