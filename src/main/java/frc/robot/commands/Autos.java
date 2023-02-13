@@ -69,9 +69,15 @@ public final class Autos {
   }
 
   public static CommandBase highConeAuto(ElevatorSubsystem elevator) {
-    return Commands.sequence(elevator.setAnglePosition(()->2), elevator.setPosition(()->3), new WaitCommand(2),
-    elevator.setAngle(()->0.3), new WaitCommand(1), elevator.setPosition(()->1), new WaitCommand(1),
-    elevator.setAngle(()->1));
+    return Commands.sequence(
+      elevator.setAnglePosition(()->2),
+      elevator.setPosition(()->3),
+      new WaitCommand(2),
+      elevator.setAngle(()->0.3),
+      new WaitCommand(1),
+      elevator.setPosition(()->1),
+      new WaitCommand(1),
+      elevator.setAngle(()->1));
   }
 
 
