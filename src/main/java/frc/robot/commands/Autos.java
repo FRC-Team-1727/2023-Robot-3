@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
-  public static CommandBase exampleAuto(DriveSubsystem m_robotDrive) {
+  public static CommandBase driveAutoCommand(DriveSubsystem m_robotDrive) {
     // Create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(
         AutoConstants.kMaxSpeedMetersPerSecond,
@@ -77,7 +77,8 @@ public final class Autos {
       new WaitCommand(1),
       elevator.setPosition(()->1),
       new WaitCommand(1),
-      elevator.setAngle(()->1));
+      elevator.setAngle(()->1)
+    );
   }
 
 
