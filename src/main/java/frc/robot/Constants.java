@@ -30,6 +30,10 @@ public final class Constants {
     public static final double kMaxSpeedMetersPerSecond = 0.75; //4.8
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
+    public static final double kDirectionSlewRate = 1.2; // radians per second
+    public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(20.5);;
     // Distance between centers of right and left wheels on robot
@@ -107,6 +111,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final double kDriveDeadband = 0.05;
   }
 
   public static final class AutoConstants {
@@ -114,7 +119,7 @@ public final class Constants {
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-
+    public static final double kDriveDeadband = 0.05;
     public static final double kPXController = 1;
     public static final double kPYController = 1;
     public static final double kPThetaController = 1;
