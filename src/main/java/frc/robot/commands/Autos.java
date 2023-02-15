@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
-  public static CommandBase driveAutoCommand(DriveSubsystem m_robotDrive) {
+  public static CommandBase driveAutoCommand(DriveSubsystem m_robotDrive, Pose2d start, List<Translation2d> interiorWaypoints, Pose2d end) {
     // Create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(
         AutoConstants.kMaxSpeedMetersPerSecond,
@@ -36,14 +36,7 @@ public final class Autos {
         .setKinematics(DriveConstants.kDriveKinematics);
 
     // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
-        config);
+    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(start, interiorWaypoints, end, config);
 
     var thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
@@ -81,6 +74,14 @@ public final class Autos {
     );
   }
 
+  public static CommandBase driveTestAuto(DriveSubsystem m_robotDrive) {
+    return Autos.driveAutoCommand(m_robotDrive, // Start at the origin facing the +X direction
+    new Pose2d(0, 0, new Rotation2d(0)),
+    // Pass through these two interior waypoints, making an 's' curve path
+    List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+    // End 3 meters straight ahead of where we started, facing forward
+    new Pose2d(3, 0, new Rotation2d(0)));
+  }
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
