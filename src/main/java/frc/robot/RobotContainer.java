@@ -112,7 +112,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {      
-    // return Autos.highConeAuto(m_elevatorSubsystem);
-    return Autos.driveTestAuto(m_robotDrive);
+    return Autos.highConeAuto(m_elevatorSubsystem);
+    // return Autos.driveTestAuto(m_robotDrive);
   }
 }

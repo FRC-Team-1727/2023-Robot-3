@@ -27,7 +27,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 0.75;//4.8;
+    public static final double kMaxSpeedMetersPerSecond = 1.5;//4.8;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 3.6;//1.2; // radians per second
@@ -146,9 +146,9 @@ public final class Constants {
       /* third stage */ 160
     };
     public static final double[] kAnglerPositions = {
-      /* starting position */ .130,
-      /* zero/horizontal */ 0.130,
-      /* up */ 0.4
+      /* starting position */ .20,
+      /* zero/horizontal */ 0.20,
+      /* up */ 2
     };
     
     //angler motor to angle ratio : 240:1
