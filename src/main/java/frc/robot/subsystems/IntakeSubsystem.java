@@ -5,17 +5,22 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.IntakeConstants.*;
 
+import java.util.function.DoubleSupplier;
+
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
   CANSparkMax intake = new CANSparkMax(kIntakePort, MotorType.kBrushless);
   
-  public IntakeSubsystem() {}
+  public IntakeSubsystem() {
+    intake.setIdleMode(IdleMode.kBrake);
+  }
 
   /**
    * Example command factory method.
@@ -23,15 +28,22 @@ public class IntakeSubsystem extends SubsystemBase {
    * @return a command
    */
   
-   public void intake(double rt, double lt) {
-      if (rt > 0.1) {
-        intake.set(kIntakeSpeed * rt);
-      } else if (lt > 0.1) {
-        intake.set(kOuttakeSpeed * lt);
-      } else {
-        intake.stopMotor();
-      }
-   }
+  
+  public void intake(DoubleSupplier spd) {
+    if (spd.getAsDouble() < 0.1) {
+      stop();
+    } else {
+      intake.set(spd.getAsDouble() * kIntakeSpeed);
+    }
+  }
+
+  public void outtake(double spd) {
+      intake.set(spd * kOuttakeSpeed);
+  }
+
+  public void stop() {
+    intake.stopMotor();
+  }
   
 
   /**

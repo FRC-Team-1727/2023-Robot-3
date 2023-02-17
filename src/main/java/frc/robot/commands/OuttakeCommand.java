@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 import java.util.function.DoubleSupplier;
 
@@ -13,19 +14,23 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /** An example command that uses an example subsystem. */
 public class OuttakeCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ElevatorSubsystem m_subsystem;
+  private final ElevatorSubsystem m_elevatorSubsystem;
+  private final IntakeSubsystem m_intakeSubsystem;
   private final DoubleSupplier speed;
+  private final DoubleSupplier rs;
 
   /**
    * Creates a new OuttakeCommand.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param elevator The subsystem used by this command.
    */
-  public OuttakeCommand(ElevatorSubsystem subsystem, DoubleSupplier lt) {
-    m_subsystem = subsystem;
+  public OuttakeCommand(ElevatorSubsystem elevator, IntakeSubsystem intake, DoubleSupplier lt, DoubleSupplier rs) {
+    m_elevatorSubsystem = elevator;
+    m_intakeSubsystem = intake;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements(elevator, intake);
     speed = lt;
+    this.rs = rs;
   }
 
   // Called when the command is initially scheduled.
@@ -36,16 +41,22 @@ public class OuttakeCommand extends CommandBase {
   @Override
   public void execute() {
     // m_subsystem.move(speed.getAsDouble());
-    m_subsystem.moveAngle(speed.getAsDouble());
+    m_elevatorSubsystem.moveAngle(speed.getAsDouble());
+
+    if (rs.getAsDouble() > 0.1) {
+      m_intakeSubsystem.outtake(rs.getAsDouble());
+    } else {
+      m_intakeSubsystem.stop();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.move(0);
-    m_subsystem.setElevationAsIs();
-    m_subsystem.moveAngle(0);
-    m_subsystem.setAngleAsIs();
+    m_elevatorSubsystem.move(0);
+    m_elevatorSubsystem.setElevationAsIs();
+    m_elevatorSubsystem.moveAngle(0);
+    m_elevatorSubsystem.setAngleAsIs();
   }
 
   // Returns true when the command should end.

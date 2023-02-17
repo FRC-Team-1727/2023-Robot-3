@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-//   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -50,6 +50,12 @@ public class RobotContainer {
               -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
               false, true),
             m_robotDrive));
+
+    m_intakeSubsystem.setDefaultCommand(
+      new RunCommand(
+        () -> m_intakeSubsystem.intake(
+          ()->m_driverController.getRightTriggerAxis()),
+          m_intakeSubsystem));
 
     // m_intakeSubsystem.setDefaultCommand(
     //     // intake with right trigger
@@ -95,7 +101,11 @@ public class RobotContainer {
     m_driverController.rightTrigger().onTrue(m_elevatorSubsystem.intakePosition());
     m_driverController.rightBumper().onTrue(m_elevatorSubsystem.setAnglePosition(() -> 2));
     m_driverController.leftBumper().onTrue(m_elevatorSubsystem.changePosition());
-    m_driverController.leftTrigger().whileTrue(new OuttakeCommand(m_elevatorSubsystem, () -> -m_driverController.getLeftTriggerAxis()));
+    m_driverController.leftTrigger().whileTrue(new OuttakeCommand(
+      m_elevatorSubsystem, m_intakeSubsystem,
+      () -> -m_driverController.getLeftTriggerAxis(),
+      () -> m_driverController.getRightY()
+    ));
     m_driverController.a().onTrue(new ZeroElevatorCommand(m_elevatorSubsystem));
 
     /*tentative controls
