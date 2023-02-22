@@ -131,8 +131,8 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final int kIntakePort = 11;
-    public static final double kIntakeSpeed = 1;
-    public static final double kOuttakeSpeed = -1;
+    public static final double kIntakeSpeed = 0.8;
+    public static final double kOuttakeSpeed = -0.6;
   }
 
   public static final class ElevatorConstants {
@@ -140,15 +140,16 @@ public final class Constants {
     public static final int kAnglerPort = 9;
     public static final double kElevatorSpeed = 0.05;
     public static final int[] kElevatorPositions = {
-      /* zero/default */ 0,
-      /* intaking */ 2,
+      /* default/intaking */ 2,
       /* second stage */ 95,
-      /* third stage */ 160
+      /* third stage */ 167
     };
+    public static final int kLoadElevation = 100; 
     public static final double[] kAnglerPositions = {
-      /* starting position */ .20,
-      /* zero/horizontal */ 0.20,
-      /* up */ 2
+      /* zero/horizontal */ 0.05,
+      /* scoring position */ 2.1,
+      /* up/safe position */ 2.5,
+      /* loading position */ 1.5
     };
     
     //angler motor to angle ratio : 240:1

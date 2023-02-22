@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -63,14 +64,14 @@ public final class Autos {
 
   public static CommandBase highConeAuto(ElevatorSubsystem elevator) {
     return Commands.sequence(
-      elevator.setAnglePosition(()->2),
-      elevator.setPosition(()->3),
+      elevator.setAnglePosition(()->1),
+      elevator.setPosition(()->2),
       new WaitCommand(2),
       elevator.setAngle(()->1.7),
       new WaitCommand(1),
-      elevator.setPosition(()->1),
+      elevator.setPosition(()->0),
       new WaitCommand(1),
-      elevator.setAnglePosition(()->1)
+      elevator.setAnglePosition(()->0)
     );
   }
 
@@ -81,6 +82,17 @@ public final class Autos {
     List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
     // End 3 meters straight ahead of where we started, facing forward
     new Pose2d(3, 0, new Rotation2d(0)));
+  }
+
+  public static CommandBase threeConeAuto(DriveSubsystem m_robotDrive, ElevatorSubsystem m_elevatorSubsystem) {
+    return Commands.sequence(
+      highConeAuto(m_elevatorSubsystem),
+      driveAutoCommand(
+        m_robotDrive,
+        new Pose2d(0, 0, new Rotation2d(Math.PI)),
+        List.of(new Translation2d(0, 0)),
+        new Pose2d(2, 0, new Rotation2d(0)))
+    );
   }
 
   private Autos() {

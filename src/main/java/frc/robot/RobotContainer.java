@@ -54,20 +54,11 @@ public class RobotContainer {
     m_intakeSubsystem.setDefaultCommand(
       new RunCommand(
         () -> m_intakeSubsystem.intake(
-          ()->m_driverController.getRightTriggerAxis()),
+          ()->m_driverController.getRightTriggerAxis() + (m_driverController.y().getAsBoolean() ? 2 : 0)),
           m_intakeSubsystem));
 
-    // m_intakeSubsystem.setDefaultCommand(
-    //     // intake with right trigger
-    //     // outtake with left trigger
-    //     new RunCommand(
-    //         () -> m_intakeSubsystem.intake(
-    //             m_driverController.getRightTriggerAxis(),
-    //             m_driverController.getLeftTriggerAxis()),
-    //         m_intakeSubsystem));
-
-    //updates elevator position based on angle
-    m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.updateElevation());
+    //updates elevator position & angle
+    m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.updateElevator());
 
     //manual control for testing
     // m_elevatorSubsystem.setDefaultCommand(
@@ -99,8 +90,8 @@ public class RobotContainer {
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     
     m_driverController.rightTrigger().onTrue(m_elevatorSubsystem.intakePosition());
-    m_driverController.rightBumper().onTrue(m_elevatorSubsystem.setAnglePosition(() -> 2));
-    m_driverController.leftBumper().onTrue(m_elevatorSubsystem.changePosition());
+    m_driverController.rightBumper().onTrue(m_elevatorSubsystem.drivePosition());
+    m_driverController.leftBumper().onTrue(m_elevatorSubsystem.scoringPosition());
     m_driverController.leftTrigger().whileTrue(new OuttakeCommand(
       m_elevatorSubsystem, m_intakeSubsystem,
       () -> -m_driverController.getLeftTriggerAxis(),
@@ -122,7 +113,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {      
-    return Autos.highConeAuto(m_elevatorSubsystem);
-    // return Autos.driveTestAuto(m_robotDrive);
+    // return Autos.highConeAuto(m_elevatorSubsystem);
+    return Autos.driveTestAuto(m_robotDrive);
   }
 }

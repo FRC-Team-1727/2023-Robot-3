@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ElevatorConstants.*;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 
@@ -66,7 +67,7 @@ public class ElevatorSubsystem extends SubsystemBase {
    * @return a command
    */
 
-  public CommandBase updateElevation() {
+  public CommandBase updateElevator() {
     return runOnce(
       () -> {
         if (elevation < 0) {
@@ -74,6 +75,20 @@ public class ElevatorSubsystem extends SubsystemBase {
         }
         elevatorMotor.getPIDController().setReference(elevation - angle, ControlType.kPosition);
       });
+  }
+
+  public CommandBase drivePosition() {
+    return setPosition(()->0).andThen(setAnglePosition(()->2));
+  }
+
+  public CommandBase intakePosition() {
+    return setAnglePosition(()->0).andThen(setPosition(()->0)).andThen(runOnce(
+      ()-> elevatorMotor.getPIDController().setOutputRange(-0.45, 0.75)
+      ));
+  }
+
+  public CommandBase scoringPosition() {
+    return changePosition().andThen(setAnglePosition(()->1));
   }
   
   public void move(double value) {
@@ -87,7 +102,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.position = position.getAsInt();
         this.elevation = kElevatorPositions[position.getAsInt()];
         System.out.println("setting position" + " " + elevation + " " + position);
-      }).andThen(updateElevation());
+      }).andThen(updateElevator());
   }
 
   public CommandBase changePosition() {
@@ -110,11 +125,14 @@ public class ElevatorSubsystem extends SubsystemBase {
   public CommandBase setAnglePosition(IntSupplier position) {
     return runOnce(
       () -> {
-        angle = kAnglerPositions[position.getAsInt()];
-        anglePosition = position.getAsInt();
-        angler.getPIDController().setReference(angle, ControlType.kPosition);
-        // System.out.println("setting angle");
+        setAnglePosition(position.getAsInt());
       });
+  }
+
+  public void setAnglePosition(int position) {
+      angle = kAnglerPositions[position];
+      anglePosition = position;
+      angler.getPIDController().setReference(angle, ControlType.kPosition);
   }
 
   public void runLowVoltage() {
@@ -130,10 +148,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     return Math.abs(elevatorMotor.getEncoder().getVelocity()) < 0.1;
   }
 
-  public CommandBase intakePosition() {
-    return setAnglePosition(()->1).andThen(setPosition(()->1)).andThen(runOnce(
-      ()-> elevatorMotor.getPIDController().setOutputRange(-0.45, 0.75)
-      ));
+  public CommandBase loadPosition() {
+    return setPosition(()->0).andThen(runOnce(
+      ()->elevation = kLoadElevation));
   }
 
   public void manualControl(boolean lt, boolean lb, boolean rt, boolean rb) {
