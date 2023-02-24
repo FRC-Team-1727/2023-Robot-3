@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.OuttakeCommand;
@@ -13,6 +15,10 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -98,6 +104,7 @@ public class RobotContainer {
       () -> m_driverController.getRightY()
     ));
     m_driverController.a().onTrue(new ZeroElevatorCommand(m_elevatorSubsystem));
+    m_driverController.x().onTrue(new RunCommand(()->m_robotDrive.resetGyro(), m_robotDrive));
 
     /*tentative controls
      * RT - intake position down (angle horizontal, elevator out some) - also runs intake
@@ -113,7 +120,17 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {      
-    // return Autos.highConeAuto(m_elevatorSubsystem);
-    return Autos.driveTestAuto(m_robotDrive);
+    TrajectoryConfig config = new TrajectoryConfig(
+        AutoConstants.kMaxSpeedMetersPerSecond,
+        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+        // Add kinematics to ensure max speed is actually obeyed
+        .setKinematics(DriveConstants.kDriveKinematics);
+
+    var thetaController = new ProfiledPIDController(
+        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+
+    return Autos.highConeAuto(m_elevatorSubsystem, m_robotDrive, config, thetaController);
   }
 }

@@ -46,6 +46,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+  // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU(); //placeholder for removing gyro 
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
@@ -76,7 +77,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        Rotation2d.fromDegrees(m_gyro.getAngle()),
+        Rotation2d.fromDegrees(-m_gyro.getAngle()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -89,6 +90,9 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("FL Turning Speed", m_frontLeft.getCurTurningSpeed());
     SmartDashboard.putNumber("gyro", m_gyro.getAngle());
     SmartDashboard.putNumber("gyro wrapped", m_gyro.getAngle() % 360);
+    SmartDashboard.putNumber("heading", getHeading());
+    SmartDashboard.putNumber("x", getPose().getX());
+    SmartDashboard.putNumber("y", getPose().getY());
   }
 
   /**
@@ -107,7 +111,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        Rotation2d.fromDegrees(/*m_gyro.getAngle()*/0),
+        Rotation2d.fromDegrees(m_gyro.getAngle()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -115,6 +119,10 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
         },
         pose);
+  }
+
+  public void resetGyro() {
+    m_gyro.reset();
   }
 
   /**

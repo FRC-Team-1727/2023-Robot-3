@@ -20,15 +20,53 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public final class Autos {
-  /** Example static factory for an autonomous command. */
-  public static CommandBase driveAutoCommand(DriveSubsystem m_robotDrive, Pose2d start, List<Translation2d> interiorWaypoints, Pose2d end) {
+  
+  public static SwerveControllerCommand swerveCommand(DriveSubsystem m_robotDrive, ProfiledPIDController thetaController, Trajectory trajectory) {
+    return new SwerveControllerCommand(
+        trajectory,
+        m_robotDrive::getPose, // Functional interface to feed supplier
+        DriveConstants.kDriveKinematics,
+
+        // Position controllers
+        new PIDController(AutoConstants.kPXController, 0, 0),
+        new PIDController(AutoConstants.kPYController, 0, 0),
+        thetaController,
+        m_robotDrive::setModuleStates,
+        m_robotDrive);
+  }
+  
+  public static CommandBase highConeAuto(ElevatorSubsystem elevator, DriveSubsystem m_robotDrive, TrajectoryConfig config, ProfiledPIDController thetaController) {
+    Trajectory t1 = TrajectoryGenerator.generateTrajectory(
+      // Start at the origin facing the +X direction
+      new Pose2d(0, 0, new Rotation2d(Math.toRadians(179))),
+      // Pass through these two interior waypoints, making an 's' curve path
+      List.of(new Translation2d(1, 0)),
+      // End 3 meters straight ahead of where we started, facing forward
+      new Pose2d(2, 0, new Rotation2d(0)),
+      config);
+    
+    m_robotDrive.resetOdometry(t1.getInitialPose());
+    m_robotDrive.resetGyro();
+    return Commands.sequence(
+      elevator.setAnglePosition(()->1),
+      elevator.setPosition(()->2),
+      new WaitCommand(2),
+      elevator.setAngle(()->1.7),
+      new WaitCommand(1),
+      elevator.setPosition(()->0),
+      new WaitCommand(1),
+      elevator.intakePosition(),
+      swerveCommand(m_robotDrive, thetaController, t1)
+    );
+  }
+
+  public static CommandBase exampleAuto(DriveSubsystem m_robotDrive) {
     // Create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(
         AutoConstants.kMaxSpeedMetersPerSecond,
@@ -37,7 +75,14 @@ public final class Autos {
         .setKinematics(DriveConstants.kDriveKinematics);
 
     // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(start, interiorWaypoints, end, config);
+    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, 0, new Rotation2d(0)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        List.of(new Translation2d(1, 0)),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(2, 0, new Rotation2d(Math.toRadians(179))),
+        config);
 
     var thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
@@ -57,42 +102,10 @@ public final class Autos {
 
     // Reset odometry to the starting pose of the trajectory.
     m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+    m_robotDrive.resetGyro();
 
     // Run path following command, then stop at the end.
     return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false));
-  }
-
-  public static CommandBase highConeAuto(ElevatorSubsystem elevator) {
-    return Commands.sequence(
-      elevator.setAnglePosition(()->1),
-      elevator.setPosition(()->2),
-      new WaitCommand(2),
-      elevator.setAngle(()->1.7),
-      new WaitCommand(1),
-      elevator.setPosition(()->0),
-      new WaitCommand(1),
-      elevator.setAnglePosition(()->0)
-    );
-  }
-
-  public static CommandBase driveTestAuto(DriveSubsystem m_robotDrive) {
-    return Autos.driveAutoCommand(m_robotDrive, // Start at the origin facing the +X direction
-    new Pose2d(0, 0, new Rotation2d(0)),
-    // Pass through these two interior waypoints, making an 's' curve path
-    List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-    // End 3 meters straight ahead of where we started, facing forward
-    new Pose2d(3, 0, new Rotation2d(0)));
-  }
-
-  public static CommandBase threeConeAuto(DriveSubsystem m_robotDrive, ElevatorSubsystem m_elevatorSubsystem) {
-    return Commands.sequence(
-      highConeAuto(m_elevatorSubsystem),
-      driveAutoCommand(
-        m_robotDrive,
-        new Pose2d(0, 0, new Rotation2d(Math.PI)),
-        List.of(new Translation2d(0, 0)),
-        new Pose2d(2, 0, new Rotation2d(0)))
-    );
   }
 
   private Autos() {
