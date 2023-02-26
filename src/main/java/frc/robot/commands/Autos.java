@@ -8,7 +8,6 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 
 import java.util.List;
 
@@ -20,6 +19,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -64,6 +64,31 @@ public final class Autos {
       elevator.intakePosition(),
       swerveCommand(m_robotDrive, thetaController, t1)
     );
+  }
+
+  public static CommandBase parkAuto(ElevatorSubsystem elevator, DriveSubsystem m_robotDrive, TrajectoryConfig config, ProfiledPIDController thetaController) {
+    Trajectory t1 = TrajectoryGenerator.generateTrajectory(
+      // Start at the origin facing the +X direction
+      new Pose2d(0, 0, new Rotation2d(Math.toRadians(180))),
+      // Pass through these two interior waypoints, making an 's' curve path
+      List.of(new Translation2d(Units.feetToMeters(8), 0)),
+      // End 3 meters straight ahead of where we started, facing forward
+      new Pose2d(2, 0, new Rotation2d(180)),
+      config);
+
+      m_robotDrive.resetOdometry(t1.getInitialPose());
+      m_robotDrive.resetGyro();
+      return Commands.sequence(
+        elevator.setAnglePosition(()->1),
+        elevator.setPosition(()->2),
+        new WaitCommand(2),
+        elevator.setAngle(()->1.7),
+        new WaitCommand(1),
+        elevator.setPosition(()->0),
+        new WaitCommand(1),
+        elevator.intakePosition(),
+        swerveCommand(m_robotDrive, thetaController, t1).alongWith(new ZeroElevatorCommand(elevator))
+      );
   }
 
   public static CommandBase exampleAuto(DriveSubsystem m_robotDrive) {
