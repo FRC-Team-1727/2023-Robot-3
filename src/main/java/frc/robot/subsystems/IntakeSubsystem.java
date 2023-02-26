@@ -44,6 +44,10 @@ public class IntakeSubsystem extends SubsystemBase {
   public void stop() {
     intake.stopMotor();
   }
+
+  public CommandBase intakeCommand(DoubleSupplier spd) {
+    return runOnce(()->intake(spd));
+  }
   
 
   /**

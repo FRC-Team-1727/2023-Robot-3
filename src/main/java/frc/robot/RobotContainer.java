@@ -98,13 +98,14 @@ public class RobotContainer {
     m_driverController.rightTrigger().onTrue(m_elevatorSubsystem.intakePosition());
     m_driverController.rightBumper().onTrue(m_elevatorSubsystem.drivePosition());
     m_driverController.leftBumper().onTrue(m_elevatorSubsystem.scoringPosition());
+    m_driverController.y().onTrue(m_elevatorSubsystem.loadingPosition());
     m_driverController.leftTrigger().whileTrue(new OuttakeCommand(
       m_elevatorSubsystem, m_intakeSubsystem,
       () -> -m_driverController.getLeftTriggerAxis(),
       () -> m_driverController.getRightY()
     ));
     m_driverController.a().onTrue(new ZeroElevatorCommand(m_elevatorSubsystem));
-    m_driverController.x().onTrue(new RunCommand(()->m_robotDrive.resetGyro(), m_robotDrive));
+    m_driverController.x().onTrue(new RunCommand(()->m_robotDrive.resetGyro(0), m_robotDrive));
 
     /*tentative controls
      * RT - intake position down (angle horizontal, elevator out some) - also runs intake
@@ -131,6 +132,6 @@ public class RobotContainer {
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
 
-    return Autos.highConeAuto(m_elevatorSubsystem, m_robotDrive, config, thetaController);
+    return Autos.parkAuto (m_elevatorSubsystem, m_robotDrive, m_intakeSubsystem, config, thetaController);
   }
 }

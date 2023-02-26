@@ -93,6 +93,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("heading", getHeading());
     SmartDashboard.putNumber("x", getPose().getX());
     SmartDashboard.putNumber("y", getPose().getY());
+    SmartDashboard.putNumber("pitch", getPitch());
   }
 
   /**
@@ -121,8 +122,9 @@ public class DriveSubsystem extends SubsystemBase {
         pose);
   }
 
-  public void resetGyro() {
+  public void resetGyro(double angle) {
     m_gyro.reset();
+    m_gyro.setAngleAdjustment(angle);
   }
 
   /**

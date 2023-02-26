@@ -45,16 +45,17 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorMotor.getPIDController().setI(0);
     elevatorMotor.getPIDController().setD(0.1);
     elevatorMotor.getPIDController().setFF(0);
-    angler.getPIDController().setP(1);
+    angler.getPIDController().setP(2);
     angler.getPIDController().setI(0.0001);
-    angler.getPIDController().setD(0.2);
+    angler.getPIDController().setD(0.45);
     angler.getPIDController().setFF(0);
     angler.setInverted(true);
 
     angler.getAbsoluteEncoder(Type.kDutyCycle).setZeroOffset(3.7);
 
     elevatorMotor.getPIDController().setOutputRange(-0.75, 0.75);
-    angler.getPIDController().setOutputRange(-0.2, 0.5);
+    angler.getPIDController().setOutputRange(-0.4, 0.5);
+    // angler.getPIDController().setOutputRange(-0.1, 0.1);
 
 
     elevatorMotor.setIdleMode(IdleMode.kCoast);
@@ -90,6 +91,10 @@ public class ElevatorSubsystem extends SubsystemBase {
   public CommandBase scoringPosition() {
     return changePosition().andThen(setAnglePosition(()->1));
   }
+
+  public CommandBase loadingPosition() {
+    return setAnglePosition(()->3).andThen(setPosition(()->3));
+  }
   
   public void move(double value) {
     // elevation += value * kElevatorSpeed;
@@ -109,7 +114,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     return runOnce(
       () -> {
         position++;
-        if (position >= kElevatorPositions.length) {
+        if (position >= kElevatorPositions.length - 1) {
           position = 1;
         }
         elevatorMotor.getPIDController().setOutputRange(-0.75, 0.75);
@@ -146,11 +151,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public boolean elevatorStopped() {
     return Math.abs(elevatorMotor.getEncoder().getVelocity()) < 0.1;
-  }
-
-  public CommandBase loadPosition() {
-    return setPosition(()->0).andThen(runOnce(
-      ()->elevation = kLoadElevation));
   }
 
   public void manualControl(boolean lt, boolean lb, boolean rt, boolean rb) {
