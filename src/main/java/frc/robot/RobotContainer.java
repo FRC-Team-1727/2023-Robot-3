@@ -120,18 +120,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {      
-    TrajectoryConfig config = new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.kDriveKinematics);
-
-    var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-
-    return Autos.parkAuto (m_elevatorSubsystem, m_robotDrive, m_intakeSubsystem, config, thetaController);
+  public Command getAutonomousCommand() {
+    Autos.loadEventMap(m_elevatorSubsystem, m_robotDrive, m_intakeSubsystem);
+    return Autos.climbAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
   }
 }

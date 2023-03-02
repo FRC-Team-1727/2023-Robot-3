@@ -10,170 +10,97 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
+import java.util.HashMap;
 import java.util.List;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.util.Units;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
+ 
+
 public final class Autos {
-  
-  public static SwerveControllerCommand swerveCommand(DriveSubsystem m_robotDrive, ProfiledPIDController thetaController, Trajectory trajectory) {
-    return new SwerveControllerCommand(
-        trajectory,
-        m_robotDrive::getPose, // Functional interface to feed supplier
-        DriveConstants.kDriveKinematics,
+  private static HashMap<String, Command> eventMap = new HashMap<>();
 
-        // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
-        thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
+
+  public static void loadEventMap(ElevatorSubsystem elevator, DriveSubsystem drive, IntakeSubsystem intake) {
+    eventMap = new HashMap<>();
+    eventMap.put("firstCone", highConeAuto(elevator, intake));
+    eventMap.put("intake", intake.intakeCommand(()->1));
+    eventMap.put("stopIntake", intake.intakeCommand(()->0));
+    eventMap.put("drivePosition", elevator.drivePosition());
+    eventMap.put("angleScore", elevator.setAnglePosition(()->1));
+    eventMap.put("elevator0", elevator.setPosition(()->0));
+    eventMap.put("elevator1", elevator.setPosition(()->1));
+    eventMap.put("elevator2", elevator.setPosition(()->2));
   }
-  
-  public static CommandBase highConeAuto(ElevatorSubsystem elevator, DriveSubsystem m_robotDrive, IntakeSubsystem intake, TrajectoryConfig config, ProfiledPIDController thetaController) {
-    Trajectory t1 = TrajectoryGenerator.generateTrajectory(
-      // Start at the origin facing the +X direction
-      new Pose2d(0, 0, Rotation2d.fromDegrees(180)),
-      // Pass through these two interior waypoints, making an 's' curve path
-      List.of(new Translation2d(2, 0)),
-      // End 3 meters straight ahead of where we started, facing forward
-      new Pose2d(Units.feetToMeters(16), 0, new Rotation2d(0)),
-      config);
 
-    Trajectory t2 = TrajectoryGenerator.generateTrajectory(
-      // Start at the origin facing the +X direction
-      new Pose2d(Units.feetToMeters(16), 0, Rotation2d.fromDegrees(180)),
-      // Pass through these two interior waypoints, making an 's' curve path
-      List.of(
-        new Translation2d(Units.inchesToMeters(4), 0),
-        new Translation2d(Units.inchesToMeters(4), Units.feetToMeters(4))
-      ),
-      // End 3 meters straight ahead of where we started, facing forward
-      new Pose2d(0, Units.feetToMeters(4), new Rotation2d(0)),
-      config);
-    
-    m_robotDrive.resetOdometry(t1.getInitialPose());
-    m_robotDrive.resetGyro(t1.getInitialPose().getRotation().getDegrees());
-    return Commands.sequence(
+  public static CommandBase highConeAuto(ElevatorSubsystem elevator, IntakeSubsystem intake) {
+    CommandBase auto = Commands.sequence(
       elevator.setAnglePosition(()->1),
       elevator.setPosition(()->2),
       new WaitCommand(2),
       elevator.setAngle(()->1.8),
       new WaitCommand(1),
       elevator.setPosition(()->0),
+      intake.outtakeCommand(()->-1),
       new WaitCommand(1),
       elevator.intakePosition(),
-      intake.intakeCommand(()->1),
-      swerveCommand(m_robotDrive, thetaController, t1).alongWith(new ZeroElevatorCommand(elevator)),
-      intake.intakeCommand(()->0),
-      elevator.drivePosition(),
-      swerveCommand(m_robotDrive, thetaController, t2),
-      elevator.setAnglePosition(()->1),
-      elevator.setPosition(()->2),
-      new WaitCommand(2),
-      elevator.setAngle(()->1.8),
-      new WaitCommand(1),
-      elevator.setPosition(()->0),
-      new WaitCommand(1),
-      elevator.intakePosition()
-
+      intake.intakeCommand(()->0)
     );
+
+    auto.addRequirements(intake);
+    return auto;
   }
 
-  public static CommandBase parkAuto(ElevatorSubsystem elevator, DriveSubsystem m_robotDrive, IntakeSubsystem intake, TrajectoryConfig config, ProfiledPIDController thetaController) {
-    Trajectory t1 = TrajectoryGenerator.generateTrajectory(
-      // Start at the origin facing the +X direction
-      new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-      // Pass through these two interior waypoints, making an 's' curve path
-      List.of(new Translation2d(Units.feetToMeters(8), 0)),
-      // End 3 meters straight ahead of where we started, facing forward
-      new Pose2d(Units.feetToMeters(14), 0, Rotation2d.fromDegrees(179)),
-      config);
+  public static CommandBase climbAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Climb", new PathConstraints(1, 1));
 
-    Trajectory t2 = TrajectoryGenerator.generateTrajectory(
-      // Start at the origin facing the +X direction
-      new Pose2d(Units.feetToMeters(14), 0, Rotation2d.fromDegrees(179)),
-      // Pass through these two interior waypoints, making an 's' curve path
-      List.of(new Translation2d(Units.feetToMeters(10), 0)),
-      // End 3 meters straight ahead of where we started, facing forward
-      new Pose2d(Units.feetToMeters(10), 0, Rotation2d.fromDegrees(178)),
-      config);
+    drive.resetGyro(0);
 
-      m_robotDrive.resetOdometry(t1.getInitialPose());
-      m_robotDrive.resetGyro(180);
-      return Commands.sequence(
-        m_robotDrive.runOnce(() -> m_robotDrive.drive(0, 0, 0, false, false)),
-        elevator.setAnglePosition(()->1),
-        elevator.setPosition(()->2),
-        new WaitCommand(2),
-        elevator.setAngle(()->1.8),
-        new WaitCommand(1),
-        intake.intakeCommand(()->-0.2),
-        elevator.setPosition(()->1),
-        new WaitCommand(1),
-        intake.intakeCommand(()->0),
-        elevator.drivePosition(),
-        // swerveCommand(m_robotDrive, thetaController, t1),
-        // swerveCommand(m_robotDrive, thetaController, t2),
-        m_robotDrive.runOnce(() -> m_robotDrive.drive(0, 0, 0, false, false))
-      );
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+      drive::getPose, // Pose2d supplier
+      drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+      DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+      new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+      new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+      drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+      eventMap,
+      true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+      drive // The drive subsystem. Used to properly set the requirements of path following commands
+    );
+
+    return autoBuilder.fullAuto(pathGroup);
   }
 
-  public static CommandBase exampleAuto(DriveSubsystem m_robotDrive) {
-    // Create config for trajectory
-    TrajectoryConfig config = new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.kDriveKinematics);
+  public static CommandBase testAuto(DriveSubsystem drive) {
+    PathPlannerTrajectory pathGroup = PathPlanner.loadPath("test", new PathConstraints(1, 1));
+    HashMap<String, Command> eventMap = new HashMap<>();
 
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 0)),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(2, 0, new Rotation2d(Math.toRadians(179))),
-        config);
+    drive.resetGyro(0);
 
-    var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+      drive::getPose, // Pose2d supplier
+      drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+      DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+      new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+      new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+      drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+      eventMap,
+      true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+      drive // The drive subsystem. Used to properly set the requirements of path following commands
+    );
 
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        exampleTrajectory,
-        m_robotDrive::getPose, // Functional interface to feed supplier
-        DriveConstants.kDriveKinematics,
-
-        // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
-        thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
-
-    // Reset odometry to the starting pose of the trajectory.
-    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-    m_robotDrive.resetGyro(0);
-
-    // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false));
+    return autoBuilder.fullAuto(pathGroup);
   }
-
+  
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
   }

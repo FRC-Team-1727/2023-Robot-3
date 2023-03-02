@@ -48,6 +48,10 @@ public class IntakeSubsystem extends SubsystemBase {
   public CommandBase intakeCommand(DoubleSupplier spd) {
     return runOnce(()->intake(spd));
   }
+
+  public CommandBase outtakeCommand(DoubleSupplier spd) {
+    return runOnce(()->outtake(spd.getAsDouble()));
+  }
   
 
   /**
