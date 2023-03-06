@@ -82,10 +82,24 @@ public class ElevatorSubsystem extends SubsystemBase {
     return setPosition(()->0).andThen(setAnglePosition(()->2));
   }
 
+  public void setDrivePosition() {
+    setPosition(0);
+    setAnglePosition(2);
+  }
+
+  public boolean atZero() {
+    return elevatorMotor.getEncoder().getPosition() < 10;
+  }
+
   public CommandBase intakePosition() {
     return setAnglePosition(()->0).andThen(setPosition(()->0)).andThen(runOnce(
       ()-> elevatorMotor.getPIDController().setOutputRange(-0.45, 0.75)
       ));
+  }
+
+  public void setIntakePosition() {
+    setPosition(0);
+    setAnglePosition(0);
   }
 
   public CommandBase scoringPosition() {
@@ -94,6 +108,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public CommandBase loadingPosition() {
     return setAnglePosition(()->3).andThen(setPosition(()->3));
+  }
+
+  public void setLoadingPosition() {
+    setAnglePosition(3);
+    setPosition(3);
   }
   
   public void move(double value) {
@@ -106,8 +125,17 @@ public class ElevatorSubsystem extends SubsystemBase {
       () -> {
         this.position = position.getAsInt();
         this.elevation = kElevatorPositions[position.getAsInt()];
-        System.out.println("setting position" + " " + elevation + " " + position);
+        // System.out.println("setting position" + " " + elevation + " " + position);
       }).andThen(updateElevator());
+  }
+
+  public void setPosition(int position) {
+    this.position = position;
+    this.elevation = kElevatorPositions[position];
+    if (elevation < 0) {
+      elevation = 0;
+    }
+    elevatorMotor.getPIDController().setReference(elevation - angle, ControlType.kPosition);
   }
 
   public CommandBase changePosition() {
@@ -210,6 +238,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("elevator voltage", elevatorMotor.getBusVoltage());
     SmartDashboard.putNumber("elevator velocity", elevatorMotor.getEncoder().getVelocity());
     SmartDashboard.putBoolean("elevator stopped", elevatorStopped());
+    SmartDashboard.putBoolean("elevator at zero", atZero());
   }
 
   @Override

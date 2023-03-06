@@ -8,6 +8,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ZeroElevatorCommand;
 import frc.robot.subsystems.DriveSubsystem;
@@ -95,24 +96,30 @@ public class RobotContainer {
     // cancelling on release.
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     
-    m_driverController.rightTrigger().onTrue(m_elevatorSubsystem.intakePosition());
-    m_driverController.rightBumper().onTrue(m_elevatorSubsystem.drivePosition());
+    // m_driverController.rightTrigger().onTrue(m_elevatorSubsystem.intakePosition());
+    // m_driverController.rightBumper().onTrue(m_elevatorSubsystem.drivePosition());
+    // m_driverController.y().onTrue(m_elevatorSubsystem.loadingPosition());
     m_driverController.leftBumper().onTrue(m_elevatorSubsystem.scoringPosition());
-    m_driverController.y().onTrue(m_elevatorSubsystem.loadingPosition());
     m_driverController.leftTrigger().whileTrue(new OuttakeCommand(
       m_elevatorSubsystem, m_intakeSubsystem,
       () -> -m_driverController.getLeftTriggerAxis(),
       () -> m_driverController.getRightY()
     ));
     m_driverController.a().onTrue(new ZeroElevatorCommand(m_elevatorSubsystem));
-    m_driverController.x().onTrue(new RunCommand(()->m_robotDrive.resetGyro(0), m_robotDrive));
+    m_driverController.rightTrigger().whileTrue(new IntakeCommand(m_intakeSubsystem, m_elevatorSubsystem));
+    // m_driverController.rightTrigger().onFalse(m_elevatorSubsystem.drivePosition());
+    m_driverController.rightBumper().whileTrue(new IntakeCommand(m_intakeSubsystem, m_elevatorSubsystem, true));
+    // m_driverController.x().onTrue(new RunCommand(()->m_robotDrive.resetGyro(0), m_robotDrive));
 
-    /*tentative controls
-     * RT - intake position down (angle horizontal, elevator out some) - also runs intake
-     * RB - elevator up
-     * LB - toggle elevator extension (close/far)
-     * LT - outtake/retract elevator
+    /* controls:
+     * RS - forward, backward, strafe
+     * LS - turning
+     * RT - run intake, move elevator into drive position until elevator at 0, then intake position. Move to drive position when released.
+     * LT - slowly lower angle, outtake while backing up?
+     * RB - same as RT, except match loading position rather than intake position.
+     * LB - toggle between scoring positions
      */
+
   }
 
   /**
@@ -122,6 +129,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     Autos.loadEventMap(m_elevatorSubsystem, m_robotDrive, m_intakeSubsystem);
-    return Autos.climbAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+    // return Autos.climbAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+    return Autos.threePieceAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
   }
 }

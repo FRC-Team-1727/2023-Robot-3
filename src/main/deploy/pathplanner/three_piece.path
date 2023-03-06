@@ -17,9 +17,9 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "first_cone"
+          "firstCone"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "after",
         "waitTime": 0.0
       }
@@ -87,14 +87,16 @@
         "x": 2.262824763179228,
         "y": 1.3899921386541334
       },
-      "holonomicAngle": -179.2926806314557,
+      "holonomicAngle": 180.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": true,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "drivePosition"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -190,7 +192,9 @@
       "isLocked": true,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "drivePosition"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -219,6 +223,19 @@
       "names": [
         "angleScore",
         "elevator2"
+      ]
+    },
+    {
+      "position": 4.072727272727089,
+      "names": [
+        "intakePosition"
+      ]
+    },
+    {
+      "position": 4.174545454545235,
+      "names": [
+        "event",
+        "intakePosition"
       ]
     }
   ]
