@@ -51,11 +51,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     angler.getPIDController().setFF(0);
     angler.setInverted(true);
 
-    angler.getAbsoluteEncoder(Type.kDutyCycle).setZeroOffset(3.7);
+    angler.getAbsoluteEncoder(Type.kDutyCycle).setZeroOffset(4.0);
 
-    elevatorMotor.getPIDController().setOutputRange(-0.75, 0.75);
-    angler.getPIDController().setOutputRange(-0.4, 0.5);
-    // angler.getPIDController().setOutputRange(-0.1, 0.1);
+    // elevatorMotor.getPIDController().setOutputRange(-0.75, 0.75);
+    // angler.getPIDController().setOutputRange(-0.4, 0.5);
+    angler.getPIDController().setOutputRange(-0.1, 0.1);
+    elevatorMotor.getPIDController().setOutputRange(-0.1, 0.1);
 
 
     elevatorMotor.setIdleMode(IdleMode.kCoast);
@@ -92,9 +93,11 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public CommandBase intakePosition() {
-    return setAnglePosition(()->0).andThen(setPosition(()->0)).andThen(runOnce(
-      ()-> elevatorMotor.getPIDController().setOutputRange(-0.45, 0.75)
-      ));
+    return setAnglePosition(()->0).andThen(setPosition(()->0))
+    // .andThen(runOnce(
+    //   ()-> elevatorMotor.getPIDController().setOutputRange(-0.45, 0.75)
+    //   ))
+      ;
   }
 
   public void setIntakePosition() {
@@ -145,7 +148,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         if (position >= kElevatorPositions.length - 1) {
           position = 1;
         }
-        elevatorMotor.getPIDController().setOutputRange(-0.75, 0.75);
+        // elevatorMotor.getPIDController().setOutputRange(-0.75, 0.75);
       }).andThen(setPosition(() -> position));
   }
 

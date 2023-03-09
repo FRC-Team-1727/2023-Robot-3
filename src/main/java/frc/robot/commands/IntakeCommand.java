@@ -6,6 +6,9 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -15,15 +18,17 @@ public class IntakeCommand extends CommandBase {
   private final IntakeSubsystem intake;
   private final ElevatorSubsystem elevator;
   private final boolean loading;
+  private final DoubleSupplier speed;
 
   /**
    * Creates a new IntakeCommand.
    *
    * @param intake The subsystem used by this command.
    */
-  public IntakeCommand(IntakeSubsystem intake, ElevatorSubsystem elevator) {
+  public IntakeCommand(IntakeSubsystem intake, ElevatorSubsystem elevator, DoubleSupplier speed) {
     this.intake = intake;
     this.elevator = elevator;
+    this.speed = speed;
     loading = false;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake, elevator);
@@ -33,6 +38,7 @@ public class IntakeCommand extends CommandBase {
     this.intake = intake;
     this.elevator = elevator;
     this.loading = loading;
+    speed = ()->1;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake, elevator);
   }
@@ -54,14 +60,14 @@ public class IntakeCommand extends CommandBase {
         elevator.setIntakePosition();
       }
     }
-    intake.intake(()->1);
+    intake.intake(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     elevator.setDrivePosition();
-    intake.intake(()->0);
+    // intake.intake(()->0);
     SmartDashboard.putString("intake command", "ending");
   }
 

@@ -61,7 +61,7 @@ public class RobotContainer {
     m_intakeSubsystem.setDefaultCommand(
       new RunCommand(
         () -> m_intakeSubsystem.intake(
-          ()->m_driverController.getRightTriggerAxis() + (m_driverController.y().getAsBoolean() ? 2 : 0)),
+          ()->m_driverController.getRightTriggerAxis() + (m_driverController.rightBumper().getAsBoolean() ? 2 : 0)),
           m_intakeSubsystem));
 
     //updates elevator position & angle
@@ -106,7 +106,7 @@ public class RobotContainer {
       () -> m_driverController.getRightY()
     ));
     m_driverController.a().onTrue(new ZeroElevatorCommand(m_elevatorSubsystem));
-    m_driverController.rightTrigger().whileTrue(new IntakeCommand(m_intakeSubsystem, m_elevatorSubsystem));
+    m_driverController.rightTrigger().whileTrue(new IntakeCommand(m_intakeSubsystem, m_elevatorSubsystem, ()->m_driverController.getRightTriggerAxis()));
     // m_driverController.rightTrigger().onFalse(m_elevatorSubsystem.drivePosition());
     m_driverController.rightBumper().whileTrue(new IntakeCommand(m_intakeSubsystem, m_elevatorSubsystem, true));
     // m_driverController.x().onTrue(new RunCommand(()->m_robotDrive.resetGyro(0), m_robotDrive));

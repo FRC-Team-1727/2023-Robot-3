@@ -47,17 +47,23 @@ public final class Autos {
       elevator.setAnglePosition(()->1),
       elevator.setPosition(()->2),
       new WaitCommand(2),
-      elevator.setAngle(()->1.8),
-      new WaitCommand(1),
-      elevator.setPosition(()->0),
-      intake.outtakeCommand(()->-1),
-      new WaitCommand(1),
-      elevator.intakePosition(),
-      intake.intakeCommand(()->0)
+      scoreHigh(elevator, intake)
     );
 
     auto.addRequirements(intake);
     return auto;
+  }
+
+  public static CommandBase scoreHigh(ElevatorSubsystem elevator, IntakeSubsystem intake) {
+    return Commands.sequence(
+      elevator.setAngle(()->1.8),
+      new WaitCommand(1),
+      elevator.setPosition(()->0),
+      intake.outtakeCommand(()->-1),
+      new WaitCommand(0.5),
+      elevator.drivePosition(),
+      intake.intakeCommand(()->0)
+    );
   }
 
   public static CommandBase testAuto(DriveSubsystem drive) {
