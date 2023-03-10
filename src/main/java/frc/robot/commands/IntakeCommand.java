@@ -60,7 +60,7 @@ public class IntakeCommand extends CommandBase {
         elevator.setIntakePosition();
       }
     }
-    intake.intake(speed);
+    intake.intake(speed, ()->true);
   }
 
   // Called once the command ends or is interrupted.

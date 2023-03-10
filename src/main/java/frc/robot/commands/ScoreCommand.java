@@ -12,7 +12,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class OuttakeCommand extends CommandBase {
+public class ScoreCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ElevatorSubsystem m_elevatorSubsystem;
   private final IntakeSubsystem m_intakeSubsystem;
@@ -24,11 +24,11 @@ public class OuttakeCommand extends CommandBase {
    *
    * @param elevator The subsystem used by this command.
    */
-  public OuttakeCommand(ElevatorSubsystem elevator, IntakeSubsystem intake, DoubleSupplier lt, DoubleSupplier rs) {
+  public ScoreCommand(ElevatorSubsystem elevator, IntakeSubsystem intake, DoubleSupplier lt, DoubleSupplier rs) {
     m_elevatorSubsystem = elevator;
     m_intakeSubsystem = intake;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(elevator, intake);
+    addRequirements(elevator);
     speed = lt;
     this.rs = rs;
   }
@@ -43,11 +43,11 @@ public class OuttakeCommand extends CommandBase {
     // m_subsystem.move(speed.getAsDouble());
     m_elevatorSubsystem.moveAngle(speed.getAsDouble());
 
-    if (rs.getAsDouble() > 0.1) {
-      m_intakeSubsystem.outtake(rs.getAsDouble());
-    } else {
-      m_intakeSubsystem.stop();
-    }
+    // if (rs.getAsDouble() > 0.1) {
+    //   m_intakeSubsystem.outtake(rs.getAsDouble());
+    // } else {
+    //   m_intakeSubsystem.stop();
+    // }
   }
 
   // Called once the command ends or is interrupted.

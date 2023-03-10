@@ -26,21 +26,21 @@
     },
     {
       "anchorPoint": {
-        "x": 6.566088096546741,
-        "y": 0.9234879277359507
+        "x": 6.794579954955635,
+        "y": 0.9330084218363207
       },
       "prevControl": {
-        "x": 4.852399158480028,
-        "y": 0.7711600221300219
+        "x": 5.0808910168889225,
+        "y": 0.7806805162303919
       },
       "nextControl": {
-        "x": 4.852399158480028,
-        "y": 0.7711600221300219
+        "x": 5.0808910168889225,
+        "y": 0.7806805162303919
       },
       "holonomicAngle": 0,
       "isReversal": true,
       "velOverride": null,
-      "isLocked": true,
+      "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [],
@@ -51,21 +51,21 @@
     },
     {
       "anchorPoint": {
-        "x": 2.7198084799970084,
-        "y": 0.971090398237804
+        "x": 2.9863823148073867,
+        "y": 0.942528915936693
       },
       "prevControl": {
-        "x": 3.6908988782348118,
-        "y": 0.7711600221300168
+        "x": 3.95747271304519,
+        "y": 0.7425985398289058
       },
       "nextControl": {
-        "x": 1.6767257645454485,
-        "y": 1.1858427220072472
+        "x": 1.9432995993558269,
+        "y": 1.1572812397061365
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
-      "isLocked": true,
+      "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [],
@@ -76,21 +76,21 @@
     },
     {
       "anchorPoint": {
-        "x": 1.8153615404617995,
-        "y": 1.6184839970630058
+        "x": 1.996250928368841,
+        "y": 1.5994430088622649
       },
       "prevControl": {
-        "x": 2.2628247631792187,
-        "y": 1.628004491163377
+        "x": 2.6820237497914188,
+        "y": 1.6140339199563611
       },
       "nextControl": {
-        "x": 2.2628247631792187,
-        "y": 1.628004491163377
+        "x": 2.6820237497914188,
+        "y": 1.6140339199563611
       },
       "holonomicAngle": 180.0,
       "isReversal": true,
       "velOverride": null,
-      "isLocked": true,
+      "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
         "names": [
@@ -192,7 +192,7 @@
       ]
     },
     {
-      "position": 1.0472727272727296,
+      "position": 1.0036363636363559,
       "names": [
         "stopIntake",
         "drivePosition"

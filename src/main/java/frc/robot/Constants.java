@@ -27,7 +27,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 0.5;//4.8;
+    public static final double kMaxSpeedMetersPerSecond = 4.8;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 3.6;//1.2; // radians per second
@@ -69,7 +69,7 @@ public final class Constants {
     public static final boolean kTurningEncoderInverted = true;
 
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kPinionTeeth = 14; // Adjust this to match your configuration!
+    public static final double kPinionTeeth = 13; // Adjust this to match your configuration!
     public static final double kMotorFreeSpeed = 5676 / 60;
     public static final double kDrivingMotorReduction = 990 / (kPinionTeeth * 15);
     public static final double kWheelDiameterMeters = 0.0762;
@@ -132,7 +132,11 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int kIntakePort = 11;
     public static final double kIntakeSpeed = 0.8;
-    public static final double kOuttakeSpeed = -0.8;
+    public static final double kOuttakeSpeed = -0.1;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double kFF = 0;
   }
 
   public static final class ElevatorConstants {
@@ -141,14 +145,14 @@ public final class Constants {
     public static final double kElevatorSpeed = 0.05;
     public static final int[] kElevatorPositions = {
       /* default/intaking */ 2,
-      /* second stage */ 71,//95,
-      /* third stage */ 125,//167,
+      /* second stage */ 130,
+      /* third stage */ 225,
       /* loading position */ 2
     };
     public static final double[] kAnglerPositions = {
       /* zero/horizontal */ 0.05,
-      /* scoring position */ 2.49,//2.15,
-      /* up/safe position */ 2.8,//2.5,
+      /* scoring position */ 2.35,//2.15,
+      /* up/safe position */ 2.6,//2.5,
       /* loading position */ 2.14,//1.85
     };
     

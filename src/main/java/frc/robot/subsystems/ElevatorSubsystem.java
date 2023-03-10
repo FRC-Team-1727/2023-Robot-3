@@ -47,16 +47,16 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorMotor.getPIDController().setFF(0);
     angler.getPIDController().setP(2);
     angler.getPIDController().setI(0.0001);
-    angler.getPIDController().setD(0.45);
+    angler.getPIDController().setD(0.525);
     angler.getPIDController().setFF(0);
     angler.setInverted(true);
 
     angler.getAbsoluteEncoder(Type.kDutyCycle).setZeroOffset(4.0);
 
-    // elevatorMotor.getPIDController().setOutputRange(-0.75, 0.75);
+    elevatorMotor.getPIDController().setOutputRange(-0.85, 0.85);
     // angler.getPIDController().setOutputRange(-0.4, 0.5);
-    angler.getPIDController().setOutputRange(-0.1, 0.1);
-    elevatorMotor.getPIDController().setOutputRange(-0.1, 0.1);
+    angler.getPIDController().setOutputRange(-0.25, 0.25);
+    // elevatorMotor.getPIDController().setOutputRange(-0.5, 0.5);
 
 
     elevatorMotor.setIdleMode(IdleMode.kCoast);
@@ -68,6 +68,23 @@ public class ElevatorSubsystem extends SubsystemBase {
    *
    * @return a command
    */
+
+   public CommandBase slowAngler() {
+    return runOnce(
+      ()-> {
+        angler.getPIDController().setOutputRange(-0.1, 0.1);
+      }
+    );
+   }
+
+   public CommandBase setAnglerNormalSpeed() {
+    return runOnce(
+      ()-> {
+        angler.getPIDController().setOutputRange(-0.25, 0.25);
+      }
+    );
+   }
+
 
   public CommandBase updateElevator() {
     return runOnce(

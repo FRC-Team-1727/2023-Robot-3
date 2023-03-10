@@ -9,7 +9,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.OuttakeCommand;
+import frc.robot.commands.ScoreCommand;
 import frc.robot.commands.ZeroElevatorCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -61,7 +61,8 @@ public class RobotContainer {
     m_intakeSubsystem.setDefaultCommand(
       new RunCommand(
         () -> m_intakeSubsystem.intake(
-          ()->m_driverController.getRightTriggerAxis() + (m_driverController.rightBumper().getAsBoolean() ? 2 : 0)),
+          ()->m_driverController.getRightTriggerAxis() + (m_driverController.rightBumper().getAsBoolean() ? 2 : 0),
+          ()->m_driverController.povCenter().getAsBoolean()),
           m_intakeSubsystem));
 
     //updates elevator position & angle
@@ -100,7 +101,7 @@ public class RobotContainer {
     // m_driverController.rightBumper().onTrue(m_elevatorSubsystem.drivePosition());
     // m_driverController.y().onTrue(m_elevatorSubsystem.loadingPosition());
     m_driverController.leftBumper().onTrue(m_elevatorSubsystem.scoringPosition());
-    m_driverController.leftTrigger().whileTrue(new OuttakeCommand(
+    m_driverController.leftTrigger().whileTrue(new ScoreCommand(
       m_elevatorSubsystem, m_intakeSubsystem,
       () -> -m_driverController.getLeftTriggerAxis(),
       () -> m_driverController.getRightY()
@@ -130,5 +131,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     Autos.loadEventMap(m_elevatorSubsystem, m_robotDrive, m_intakeSubsystem);
     return Autos.twoPieceAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+    // return Autos.testAuto(m_robotDrive, m_intakeSubsystem);
   }
 }
