@@ -48,7 +48,7 @@ public final class Autos {
     CommandBase auto = Commands.sequence(
       elevator.setAnglePosition(()->1),
       elevator.setPosition(()->2),
-      new WaitCommand(2),
+      new WaitCommand(1.5),
       scoreHigh(elevator, intake)
     );
 
@@ -91,7 +91,7 @@ public final class Autos {
   }
 
   public static CommandBase twoPieceAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("two_piece", new PathConstraints(4, 3),new PathConstraints(1, 1),new PathConstraints(0.5, 1));
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("two_piece", new PathConstraints(4, 2),new PathConstraints(1, 1),new PathConstraints(0.5, 1));
 
     drive.resetGyro(0);
 

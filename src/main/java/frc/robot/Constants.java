@@ -146,7 +146,7 @@ public final class Constants {
     public static final int[] kElevatorPositions = {
       /* default/intaking */ 2,
       /* second stage */ 130,
-      /* third stage */ 225,
+      /* third stage */ 215, //225
       /* loading position */ 2
     };
     public static final double[] kAnglerPositions = {
