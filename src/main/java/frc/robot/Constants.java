@@ -132,7 +132,7 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int kIntakePort = 11;
     public static final double kIntakeSpeed = 0.8;
-    public static final double kOuttakeSpeed = -0.1;
+    public static final double kOuttakeSpeed = -1;//-0.1;
     public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
@@ -155,7 +155,10 @@ public final class Constants {
       /* up/safe position */ 2.6,//2.5,
       /* loading position */ 2.14,//1.85
     };
-    
+    public static final double kHighP = 1;
+    public static final double kLowP = 1;
+    public static final double kHighI = 0.000001;
+    public static final double kLowI = 0.0001; 
     //angler motor to angle ratio : 240:1
   }
 }

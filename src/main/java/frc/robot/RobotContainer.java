@@ -130,7 +130,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     Autos.loadEventMap(m_elevatorSubsystem, m_robotDrive, m_intakeSubsystem);
-    return Autos.twoPieceAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+    // return Autos.twoPieceAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
     // return Autos.testAuto(m_robotDrive, m_intakeSubsystem);
+    // return Autos.parkAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+    return Autos.twoHalfPieceAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
   }
 }

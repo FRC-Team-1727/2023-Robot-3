@@ -41,7 +41,11 @@ public class ScoreCommand extends CommandBase {
   @Override
   public void execute() {
     // m_subsystem.move(speed.getAsDouble());
-    m_elevatorSubsystem.moveAngle(speed.getAsDouble());
+    if (m_elevatorSubsystem.atZero()) {
+      m_elevatorSubsystem.setIntakePosition();
+    } else {
+        m_elevatorSubsystem.moveAngle(speed.getAsDouble());
+    }
 
     // if (rs.getAsDouble() > 0.1) {
     //   m_intakeSubsystem.outtake(rs.getAsDouble());
@@ -53,10 +57,14 @@ public class ScoreCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_elevatorSubsystem.move(0);
-    m_elevatorSubsystem.setElevationAsIs();
-    m_elevatorSubsystem.moveAngle(0);
-    m_elevatorSubsystem.setAngleAsIs();
+    if (m_elevatorSubsystem.atZero()) {
+      m_elevatorSubsystem.setDrivePosition();
+    } else {
+      m_elevatorSubsystem.move(0);
+      m_elevatorSubsystem.setElevationAsIs();
+      m_elevatorSubsystem.moveAngle(0);
+      m_elevatorSubsystem.setAngleAsIs();
+    }
   }
 
   // Returns true when the command should end.
