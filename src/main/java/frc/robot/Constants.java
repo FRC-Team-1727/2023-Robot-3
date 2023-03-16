@@ -132,7 +132,7 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int kIntakePort = 11;
     public static final double kIntakeSpeed = 0.8;
-    public static final double kOuttakeSpeed = -1;//-0.1;
+    public static final double kOuttakeSpeed = -0.15;//-0.1;
     public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
@@ -145,7 +145,7 @@ public final class Constants {
     public static final double kElevatorSpeed = 0.05;
     public static final int[] kElevatorPositions = {
       /* default/intaking */ 2,
-      /* second stage */ 130,
+      /* second stage */ 120,
       /* third stage */ 215, //225
       /* loading position */ 2
     };

@@ -74,6 +74,10 @@ public class ElevatorSubsystem extends SubsystemBase {
    * @return a command
    */
 
+   public CommandBase driverInit() {
+    return setAnglerNormalSpeed().andThen(drivePosition());
+   }
+
    public CommandBase slowAngler() {
     return runOnce(
       ()-> {
