@@ -137,6 +137,7 @@ public class RobotContainer {
     // return Autos.twoPieceAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
     // return Autos.testAuto(m_robotDrive, m_intakeSubsystem);
     // return Autos.parkAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
-    return Autos.twoHalfPieceAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+    // return Autos.twoHalfPieceAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+    return Autos.twoHalfPieceRedAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
   }
 }
