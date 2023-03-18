@@ -157,7 +157,7 @@ public final class Autos {
     return autoBuilder.fullAuto(pathGroup);
   }
 
-  public static CommandBase twoHalfPieceAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+  public static CommandBase rightAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("two_half_piece", new PathConstraints(3, 3), new PathConstraints(2, 2));
 
     drive.resetGyro(0);
@@ -177,12 +177,13 @@ public final class Autos {
     return autoBuilder.fullAuto(pathGroup);
   }
 
-  public static CommandBase twoHalfPieceRedAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+  public static CommandBase leftAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    //experimental!
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("two_half_piece_red", new PathConstraints(3, 3), new PathConstraints(2, 2));
 
     drive.resetGyro(0);
 
-    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+    CustomAutoBuilder autoBuilder = new CustomAutoBuilder(
       drive::getPose, // Pose2d supplier
       drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
       DriveConstants.kDriveKinematics, // SwerveDriveKinematics
