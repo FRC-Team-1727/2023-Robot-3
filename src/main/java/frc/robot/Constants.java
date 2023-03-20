@@ -153,7 +153,7 @@ public final class Constants {
       /* zero/horizontal */ 0.05,
       /* scoring position */ 2.35,//2.15,
       /* up/safe position */ 2.6,//2.5,
-      /* loading position */ 2.14,//1.85
+      /* loading position */ 2.27//2.14, 2.3
     };
     public static final double kHighP = 1;
     public static final double kLowP = 1;

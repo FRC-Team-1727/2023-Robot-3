@@ -138,7 +138,7 @@ public final class Autos {
   }
 
   public static CommandBase parkAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("park2", new PathConstraints(1, 1), new PathConstraints(0.5, 1));
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("park", new PathConstraints(1, 1), new PathConstraints(0.5, 1));
 
     drive.resetGyro(0);
 
@@ -170,7 +170,7 @@ public final class Autos {
       new PIDConstants(1, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
       drive::setModuleStates, // Module states consumer used to output to the drive subsystem
       eventMap,
-      true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+      false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
       drive // The drive subsystem. Used to properly set the requirements of path following commands
     );
 

@@ -51,7 +51,7 @@ public class IntakeSubsystem extends SubsystemBase {
     } else 
     if (spd.getAsDouble() < 0.1) {
       // intakeController.setReference(currentPosition, ControlType.kPosition);
-      intake.set(0.01);
+      intake.set(0.02);
       // System.out.println("passive");
     } else {
       intake.set(spd.getAsDouble() * kIntakeSpeed);
