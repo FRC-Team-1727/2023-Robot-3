@@ -4,7 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -19,6 +23,13 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  private AddressableLED m_led;
+  private AddressableLEDBuffer m_ledBuffer;
+  private int lightMode;
+  private int animStart;
+
+  XboxController ledController = new XboxController(1);
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -28,6 +39,14 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    lightMode = 0;
+    animStart = 0;
+    m_led = new AddressableLED(0);
+    m_ledBuffer = new AddressableLEDBuffer(60);
+    m_led.setLength(m_ledBuffer.getLength());
+    m_led.setData(m_ledBuffer);
+    m_led.start();
   }
 
   /**
@@ -44,6 +63,46 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    switch (lightMode) {
+      case 0: //rainbow
+        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+          int hue = (animStart + (i * 180 / m_ledBuffer.getLength())) % 180;
+          m_ledBuffer.setHSV(i, hue, 255, 128);
+        }
+        animStart += 3;
+        animStart %= 180;
+        break;
+      case 1: //cone
+        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+          m_ledBuffer.setLED(i, Color.kYellow);
+        }
+        break;
+      case 2: //cube
+        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+          m_ledBuffer.setLED(i, Color.kPurple);
+        }
+        break;
+      case 3: //party mode
+        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+          int hue = (animStart + (i * 180 / m_ledBuffer.getLength())) % 180;
+          m_ledBuffer.setHSV(i, hue, 255, 128);
+        }
+        animStart += 3;
+        animStart %= 180;
+        break;
+    }
+
+    m_led.setData(m_ledBuffer);
+
+    if (ledController.getYButtonPressed()) {
+      lightMode = 1;
+    } else if (ledController.getBButtonPressed()) {
+      lightMode = 2;
+    } else if (ledController.getXButtonPressed()) {
+      lightMode = 3;
+      animStart = 0;
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -66,7 +125,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+
+  }
 
   @Override
   public void teleopInit() {

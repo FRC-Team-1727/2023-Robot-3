@@ -22,6 +22,7 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
  
@@ -43,6 +44,7 @@ public final class Autos {
     eventMap.put("elevator2", elevator.setPosition(()->2));
     eventMap.put("scoreHigh", scoreHigh(elevator, intake));
     eventMap.put("firstConeSafe", highConeSafe(elevator, intake));
+    eventMap.put("setX", new RunCommand(()->drive.setX(), drive));
   }
 
   public static CommandBase highConeAuto(ElevatorSubsystem elevator, IntakeSubsystem intake) {
@@ -178,7 +180,6 @@ public final class Autos {
   }
 
   public static CommandBase leftAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
-    //experimental!
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("two_half_piece_red", new PathConstraints(3, 3), new PathConstraints(2, 2));
 
     drive.resetGyro(0);
@@ -198,6 +199,46 @@ public final class Autos {
     return autoBuilder.fullAuto(pathGroup);
   }
   
+  public static CommandBase rightParkAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("right_park", new PathConstraints(3, 3), new PathConstraints(2, 2), new PathConstraints(1, 1));
+
+    drive.resetGyro(0);
+
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+      drive::getPose, // Pose2d supplier
+      drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+      DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+      new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+      new PIDConstants(1, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+      drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+      eventMap,
+      false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+      drive // The drive subsystem. Used to properly set the requirements of path following commands
+    );
+
+    return autoBuilder.fullAuto(pathGroup);
+  }
+
+  public static CommandBase leftParkAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("left_park", new PathConstraints(3, 3), new PathConstraints(2, 2), new PathConstraints(1, 1));
+
+    drive.resetGyro(0);
+
+    CustomAutoBuilder autoBuilder = new CustomAutoBuilder(
+      drive::getPose, // Pose2d supplier
+      drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+      DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+      new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+      new PIDConstants(1, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+      drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+      eventMap,
+      true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+      drive // The drive subsystem. Used to properly set the requirements of path following commands
+    );
+
+    return autoBuilder.fullAuto(pathGroup);
+  }
+
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
   }
