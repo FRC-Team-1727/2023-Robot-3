@@ -99,47 +99,7 @@ public final class Autos {
     );
   }
 
-  public static CommandBase testAuto(DriveSubsystem drive, IntakeSubsystem intake) {
-    PathPlannerTrajectory pathGroup = PathPlanner.loadPath("test", new PathConstraints(1, 1));
-
-    drive.resetGyro(0);
-
-    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-      drive::getPose, // Pose2d supplier
-      drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
-      DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-      new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-      new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
-      drive::setModuleStates, // Module states consumer used to output to the drive subsystem
-      eventMap, 
-      true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-      drive // The drive subsystem. Used to properly set the requirements of path following commands,
-    );
-
-    return autoBuilder.fullAuto(pathGroup);
-  }
-
-  public static CommandBase twoPieceAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("two_piece", new PathConstraints(4, 3),new PathConstraints(1, 1),new PathConstraints(0.5, 1));
-
-    drive.resetGyro(0);
-
-    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-      drive::getPose, // Pose2d supplier
-      drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
-      DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-      new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-      new PIDConstants(1.5, 0.0, 0.5), // PID constants to correct for rotation error (used to create the rotation controller)
-      drive::setModuleStates, // Module states consumer used to output to the drive subsystem
-      eventMap,
-      true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-      drive // The drive subsystem. Used to properly set the requirements of path following commands
-    );
-
-    return autoBuilder.fullAuto(pathGroup);
-  }
-
-  public static CommandBase parkAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+  public static CommandBase middlePark(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("park", new PathConstraints(1, 1), new PathConstraints(0.5, 1));
 
     drive.resetGyro(0);
@@ -159,8 +119,8 @@ public final class Autos {
     return autoBuilder.fullAuto(pathGroup);
   }
 
-  public static CommandBase rightAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("two_half_piece", new PathConstraints(3, 3), new PathConstraints(2, 2));
+  public static CommandBase redLoadingThree(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("red_loading_three", new PathConstraints(3, 3), new PathConstraints(2, 2));
 
     drive.resetGyro(0);
 
@@ -179,8 +139,8 @@ public final class Autos {
     return autoBuilder.fullAuto(pathGroup);
   }
 
-  public static CommandBase leftAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("two_half_piece_red", new PathConstraints(3, 3), new PathConstraints(2, 2));
+  public static CommandBase blueLoadingThree(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("two_half_piece_blue", new PathConstraints(3, 3), new PathConstraints(2, 2));
 
     drive.resetGyro(0);
 
@@ -199,7 +159,7 @@ public final class Autos {
     return autoBuilder.fullAuto(pathGroup);
   }
   
-  public static CommandBase rightParkAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+  public static CommandBase redLoadingPark(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("right_park", new PathConstraints(3, 3), new PathConstraints(2, 2), new PathConstraints(1, 1));
 
     drive.resetGyro(0);
@@ -219,7 +179,7 @@ public final class Autos {
     return autoBuilder.fullAuto(pathGroup);
   }
 
-  public static CommandBase leftParkAuto(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+  public static CommandBase blueLoadingPark(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("left_park", new PathConstraints(3, 3), new PathConstraints(2, 2), new PathConstraints(1, 1));
 
     drive.resetGyro(0);

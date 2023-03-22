@@ -138,6 +138,6 @@ public class RobotContainer {
     // return Autos.leftAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
     // return Autos.rightAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
     // return Autos.rightParkAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
-    return Autos.leftParkAuto(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+    return Autos.blueLoadingPark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
   }
 }

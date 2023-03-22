@@ -6,8 +6,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -25,8 +28,9 @@ public class Robot extends TimedRobot {
 
   private AddressableLED m_led;
   private AddressableLEDBuffer m_ledBuffer;
+  private AddressableLEDSim sim;
   private int lightMode;
-  private int animStart;
+  private double animStart;
 
   XboxController ledController = new XboxController(1);
 
@@ -42,11 +46,14 @@ public class Robot extends TimedRobot {
 
     lightMode = 0;
     animStart = 0;
-    m_led = new AddressableLED(0);
+    m_led = new AddressableLED(9);
     m_ledBuffer = new AddressableLEDBuffer(60);
     m_led.setLength(m_ledBuffer.getLength());
     m_led.setData(m_ledBuffer);
     m_led.start();
+
+    sim = new AddressableLEDSim(m_led);
+    sim.setRunning(true);
   }
 
   /**
@@ -65,14 +72,18 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     switch (lightMode) {
-      case 0: //rainbow
-        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-          int hue = (animStart + (i * 180 / m_ledBuffer.getLength())) % 180;
-          m_ledBuffer.setHSV(i, hue, 255, 128);
+      case 0: //default
+      for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+        int value = ((int)animStart + (i * 255 / m_ledBuffer.getLength())) % 510;
+        if (value > 255) {
+          value = 510 - value;
         }
-        animStart += 3;
-        animStart %= 180;
-        break;
+        m_ledBuffer.setHSV(i, DriverStation.getAlliance() == Alliance.Red ? 0 : 120, 255, value);
+        
+      }
+      animStart += 7;
+      animStart %= 510;
+      break;
       case 1: //cone
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
           m_ledBuffer.setLED(i, Color.kYellow);
@@ -85,8 +96,8 @@ public class Robot extends TimedRobot {
         break;
       case 3: //party mode
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-          int hue = (animStart + (i * 180 / m_ledBuffer.getLength())) % 180;
-          m_ledBuffer.setHSV(i, hue, 255, 128);
+          int hue = ((int)animStart + (i * 180 / m_ledBuffer.getLength())) % 180;
+          m_ledBuffer.setHSV(i, hue, 255, 255);
         }
         animStart += 3;
         animStart %= 180;
@@ -101,6 +112,9 @@ public class Robot extends TimedRobot {
       lightMode = 2;
     } else if (ledController.getXButtonPressed()) {
       lightMode = 3;
+      animStart = 0;
+    } else if (ledController.getAButtonPressed()) {
+      lightMode = 0;
       animStart = 0;
     }
   }
