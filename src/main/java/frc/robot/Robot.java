@@ -46,11 +46,12 @@ public class Robot extends TimedRobot {
 
     lightMode = 0;
     animStart = 0;
-    m_led = new AddressableLED(9);
+    m_led = new AddressableLED(0);
     m_ledBuffer = new AddressableLEDBuffer(60);
     m_led.setLength(m_ledBuffer.getLength());
     m_led.setData(m_ledBuffer);
     m_led.start();
+
 
     sim = new AddressableLEDSim(m_led);
     sim.setRunning(true);
@@ -86,7 +87,7 @@ public class Robot extends TimedRobot {
       break;
       case 1: //cone
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-          m_ledBuffer.setLED(i, Color.kYellow);
+          m_ledBuffer.setRGB(i, 255, 127, 0);
         }
         break;
       case 2: //cube
@@ -97,7 +98,7 @@ public class Robot extends TimedRobot {
       case 3: //party mode
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
           int hue = ((int)animStart + (i * 180 / m_ledBuffer.getLength())) % 180;
-          m_ledBuffer.setHSV(i, hue, 255, 255);
+          m_ledBuffer.setHSV(i, hue, 255, 128);
         }
         animStart += 3;
         animStart %= 180;

@@ -160,7 +160,7 @@ public final class Autos {
   }
   
   public static CommandBase redLoadingPark(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("right_park", new PathConstraints(3, 3), new PathConstraints(2, 2), new PathConstraints(1, 1));
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("red_loading_park", new PathConstraints(3, 3), new PathConstraints(2, 2), new PathConstraints(1, 1));
 
     drive.resetGyro(0);
 
@@ -180,7 +180,7 @@ public final class Autos {
   }
 
   public static CommandBase blueLoadingPark(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("left_park", new PathConstraints(3, 3), new PathConstraints(2, 2), new PathConstraints(1, 1));
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("blue_loading_park", new PathConstraints(3, 3), new PathConstraints(2, 2), new PathConstraints(1, 1));
 
     drive.resetGyro(0);
 
