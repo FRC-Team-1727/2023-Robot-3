@@ -140,7 +140,7 @@ public final class Autos {
   }
 
   public static CommandBase blueLoadingThree(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("two_half_piece_blue", new PathConstraints(3, 3), new PathConstraints(2, 2));
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("blue_loading_three", new PathConstraints(3, 3), new PathConstraints(2, 2));
 
     drive.resetGyro(0);
 
@@ -181,6 +181,26 @@ public final class Autos {
 
   public static CommandBase blueLoadingPark(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("blue_loading_park", new PathConstraints(3, 3), new PathConstraints(2, 2), new PathConstraints(1, 1));
+
+    drive.resetGyro(0);
+
+    CustomAutoBuilder autoBuilder = new CustomAutoBuilder(
+      drive::getPose, // Pose2d supplier
+      drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+      DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+      new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+      new PIDConstants(1, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+      drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+      eventMap,
+      true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+      drive // The drive subsystem. Used to properly set the requirements of path following commands
+    );
+
+    return autoBuilder.fullAuto(pathGroup);
+  }
+
+  public static CommandBase cableThree(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("red_cable_three", new PathConstraints(3, 3), new PathConstraints(1, 1), new PathConstraints(3, 3), new PathConstraints(1, 1), new PathConstraints(2, 2));
 
     drive.resetGyro(0);
 

@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
   private int lightMode;
   private double animStart;
 
-  XboxController ledController = new XboxController(1);
+  // XboxController ledController = new XboxController(1);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
     lightMode = 0;
     animStart = 0;
     m_led = new AddressableLED(0);
-    m_ledBuffer = new AddressableLEDBuffer(60);
+    m_ledBuffer = new AddressableLEDBuffer(34);
     m_led.setLength(m_ledBuffer.getLength());
     m_led.setData(m_ledBuffer);
     m_led.start();
@@ -107,17 +107,17 @@ public class Robot extends TimedRobot {
 
     m_led.setData(m_ledBuffer);
 
-    if (ledController.getYButtonPressed()) {
-      lightMode = 1;
-    } else if (ledController.getBButtonPressed()) {
-      lightMode = 2;
-    } else if (ledController.getXButtonPressed()) {
-      lightMode = 3;
-      animStart = 0;
-    } else if (ledController.getAButtonPressed()) {
-      lightMode = 0;
-      animStart = 0;
-    }
+    // if (ledController.getYButtonPressed()) {
+    //   lightMode = 1;
+    // } else if (ledController.getBButtonPressed()) {
+    //   lightMode = 2;
+    // } else if (ledController.getXButtonPressed()) {
+    //   lightMode = 3;
+    //   animStart = 0;
+    // } else if (ledController.getAButtonPressed()) {
+    //   lightMode = 0;
+    //   animStart = 0;
+    // }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
