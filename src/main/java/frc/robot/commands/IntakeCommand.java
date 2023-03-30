@@ -47,7 +47,7 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void initialize() {
     elevator.setDrivePosition();
-    SmartDashboard.putString("intake command", "starting");
+    // SmartDashboard.putString("intake command", "starting");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -68,7 +68,7 @@ public class IntakeCommand extends CommandBase {
   public void end(boolean interrupted) {
     elevator.setDrivePosition();
     // intake.intake(()->0);
-    SmartDashboard.putString("intake command", "ending");
+    // SmartDashboard.putString("intake command", "ending");
   }
 
   // Returns true when the command should end.

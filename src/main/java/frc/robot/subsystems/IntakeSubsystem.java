@@ -78,6 +78,10 @@ public class IntakeSubsystem extends SubsystemBase {
   public CommandBase outtakeCommand(DoubleSupplier spd) {
     return runOnce(()->outtake(spd.getAsDouble()));
   }
+
+  public boolean holdingObject() {
+    return Math.abs(intake.getEncoder().getVelocity()) < 200;
+  }
   
 
   /**
@@ -93,8 +97,9 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("intake target", currentPosition);
-    SmartDashboard.putNumber("intake position", intake.getEncoder().getPosition());
+    // SmartDashboard.putNumber("intake target", currentPosition);
+    // SmartDashboard.putNumber("intake position", intake.getEncoder().getPosition());
+    // SmartDashboard.putNumber("intake velocity", intake.getEncoder().getVelocity());
   }
 
   @Override

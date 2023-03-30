@@ -63,7 +63,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 
     elevatorMotor.setIdleMode(IdleMode.kCoast);
-    angler.setIdleMode(IdleMode.kCoast);
+    angler.setIdleMode(IdleMode.kBrake);
 
     recovering = false;
   }
@@ -278,16 +278,16 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("elevator encoder", elevatorMotor.getEncoder().getPosition());
-    SmartDashboard.putNumber("angler encoder", angler.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
+    // SmartDashboard.putNumber("elevator encoder", elevatorMotor.getEncoder().getPosition());
+    // SmartDashboard.putNumber("angler encoder", angler.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
     // SmartDashboard.putNumber("angler motor encoder", angler.getEncoder().getPosition());
-    SmartDashboard.putNumber("elevator target", elevation);
-    SmartDashboard.putNumber("angler target", angle);
+    // SmartDashboard.putNumber("elevator target", elevation);
+    // SmartDashboard.putNumber("angler target", angle);
     // SmartDashboard.putNumber("elevator voltage", elevatorMotor.getBusVoltage());
     // SmartDashboard.putNumber("elevator velocity", elevatorMotor.getEncoder().getVelocity());
     // SmartDashboard.putBoolean("elevator stopped", elevatorStopped());
     // SmartDashboard.putBoolean("elevator at zero", atZero());
-    SmartDashboard.putBoolean("recovering", recovering);
+    // SmartDashboard.putBoolean("recovering", recovering);
   }
 
   @Override

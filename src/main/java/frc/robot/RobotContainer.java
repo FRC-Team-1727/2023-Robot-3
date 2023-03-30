@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -132,12 +133,24 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public Command getAutonomousCommand(int auto) {
     Autos.loadEventMap(m_elevatorSubsystem, m_robotDrive, m_intakeSubsystem);
-    // return Autos.middlePark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
-    return Autos.redLoadingThree(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
-    // return Autos.blueLoadingThree(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
-    // return Autos.redLoadingPark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
-    // return Autos.blueLoadingPark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+
+    switch (auto) {
+      case 0: return Autos.redLoadingPark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+      case 1: return Autos.redLoadingThree(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+      case 2: return Autos.blueLoadingPark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+      case 3: return Autos.blueLoadingThree(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+      case 4: return Autos.middlePark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+      case 5: return Commands.none();
+
+      default:
+        return Autos.middlePark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+    }
+    
+  }
+
+  public boolean holdingObject() {
+    return m_intakeSubsystem.holdingObject();
   }
 }

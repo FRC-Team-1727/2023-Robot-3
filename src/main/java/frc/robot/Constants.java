@@ -145,8 +145,8 @@ public final class Constants {
     public static final double kElevatorSpeed = 0.05;
     public static final int[] kElevatorPositions = {
       /* default/intaking */ 2,
-      /* second stage */ 120,
-      /* third stage */ 215, //225
+      /* second stage */ 67,//120,
+      /* third stage */ 120,//215
       /* loading position */ 2
     };
     public static final double[] kAnglerPositions = {

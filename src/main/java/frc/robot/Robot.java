@@ -4,16 +4,25 @@
 
 package frc.robot;
 
+import javax.swing.text.Utilities;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.Autos;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -32,7 +41,9 @@ public class Robot extends TimedRobot {
   private int lightMode;
   private double animStart;
 
-  // XboxController ledController = new XboxController(1);
+  private SendableChooser<Integer> m_chooser = new SendableChooser<>();
+
+  XboxController ledController = new XboxController(1);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -47,7 +58,7 @@ public class Robot extends TimedRobot {
     lightMode = 0;
     animStart = 0;
     m_led = new AddressableLED(0);
-    m_ledBuffer = new AddressableLEDBuffer(34);
+    m_ledBuffer = new AddressableLEDBuffer(36);
     m_led.setLength(m_ledBuffer.getLength());
     m_led.setData(m_ledBuffer);
     m_led.start();
@@ -55,6 +66,16 @@ public class Robot extends TimedRobot {
 
     sim = new AddressableLEDSim(m_led);
     sim.setRunning(true);
+
+    m_chooser.setDefaultOption("Red - Two Piece + Park", 0);
+    m_chooser.addOption("Red - Two and a Half Piece", 1);
+    m_chooser.addOption("Blue - Two Piece + Park", 2);
+    m_chooser.addOption("Blue - Two and a Half Piece", 3);
+    m_chooser.addOption("Center Park", 4);
+    m_chooser.addOption("No Auto", 5);
+    SmartDashboard.putData("Auton Selector", m_chooser);
+
+    // Shuffleboard.getTab("SmartDashboard").addInteger("Time", ()->(int)DriverStation.getMatchTime()).withWidget("Large Text");
   }
 
   /**
@@ -92,32 +113,49 @@ public class Robot extends TimedRobot {
         break;
       case 2: //cube
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-          m_ledBuffer.setLED(i, Color.kPurple);
+          // m_ledBuffer.setLED(i, Color.kPurple);
+          m_ledBuffer.setRGB(i, 255, 0, 255);
         }
         break;
       case 3: //party mode
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
           int hue = ((int)animStart + (i * 180 / m_ledBuffer.getLength())) % 180;
-          m_ledBuffer.setHSV(i, hue, 255, 128);
+          m_ledBuffer.setHSV(i, hue, 255, 255);
         }
         animStart += 3;
         animStart %= 180;
         break;
     }
 
+    if (DriverStation.isTeleopEnabled() && m_robotContainer.holdingObject() && Timer.getFPGATimestamp() * 100 % 100 % 10 < 5) {
+      for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+        m_ledBuffer.setLED(i, Color.kBlack);
+      }
+    }
+
     m_led.setData(m_ledBuffer);
 
-    // if (ledController.getYButtonPressed()) {
-    //   lightMode = 1;
-    // } else if (ledController.getBButtonPressed()) {
-    //   lightMode = 2;
-    // } else if (ledController.getXButtonPressed()) {
-    //   lightMode = 3;
-    //   animStart = 0;
-    // } else if (ledController.getAButtonPressed()) {
-    //   lightMode = 0;
-    //   animStart = 0;
-    // }
+    if (ledController.getYButtonPressed()) {
+      lightMode = 1;
+    } else if (ledController.getBButtonPressed()) {
+      lightMode = 2;
+    } else if (ledController.getXButtonPressed()) {
+      lightMode = 3;
+      animStart = 0;
+    } else if (ledController.getAButtonPressed()) {
+      lightMode = 0;
+      animStart = 0;
+    }
+
+    // SmartDashboard.putNumber("auto number", m_chooser.getSelected());
+
+    int time = (int) DriverStation.getMatchTime();
+    if (time < 0) {
+      time = 0;
+    }
+    SmartDashboard.putNumber("Time", time);
+    
+  // SmartDashboard.putNumber("auto number", (int)m_chooser.getSelected());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -125,12 +163,14 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_chooser.getSelected());
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -155,11 +195,25 @@ public class Robot extends TimedRobot {
     }
 
     m_robotContainer.driverInit();
+
+    // if (m_robotContainer.holdingObject() && Timer.getFPGATimestamp() * 100 % 100 < 50) {
+    //   for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+    //     m_ledBuffer.setLED(i, Color.kBlack);
+    //   }
+    // }
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if (m_robotContainer.holdingObject() && Timer.getFPGATimestamp() * 100 % 100 % 10 < 5) {
+      for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+        m_ledBuffer.setLED(i, Color.kBlack);
+      }
+    }
+
+    m_led.setData(m_ledBuffer);
+  }
 
   @Override
   public void testInit() {
