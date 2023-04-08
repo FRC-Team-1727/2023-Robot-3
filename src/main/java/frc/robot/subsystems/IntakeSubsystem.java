@@ -24,6 +24,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private CANSparkMax intake = new CANSparkMax(kIntakePort, MotorType.kBrushless);
   private SparkMaxPIDController intakeController = intake.getPIDController();
   private double currentPosition;
+  private boolean coneMode;
   
   public IntakeSubsystem() {
     intake.setIdleMode(IdleMode.kBrake);
@@ -34,6 +35,7 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeController.setFeedbackDevice(intake.getEncoder());
     intakeController.setOutputRange(-1, 1);
     // intake.setInverted(true);
+    coneMode = false;
   }
 
   /**
@@ -51,7 +53,11 @@ public class IntakeSubsystem extends SubsystemBase {
     } else 
     if (spd.getAsDouble() < 0.1) {
       // intakeController.setReference(currentPosition, ControlType.kPosition);
-      intake.set(0.05);
+      if (coneMode) {
+        intake.set(0.1);
+      } else {
+        intake.set(0.05);
+      }
       // System.out.println("passive");
     } else {
       intake.set(spd.getAsDouble() * kIntakeSpeed);
@@ -81,6 +87,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public boolean holdingObject() {
     return Math.abs(intake.getEncoder().getVelocity()) < 200;
+  }
+
+  public void setConeMode(boolean mode) {
+    coneMode = mode;
   }
   
 

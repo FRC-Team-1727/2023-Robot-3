@@ -145,15 +145,15 @@ public final class Constants {
     public static final double kElevatorSpeed = 0.05;
     public static final int[] kElevatorPositions = {
       /* default/intaking */ 2,
-      /* second stage */ 67,//120,
-      /* third stage */ 120,//215
+      /* second stage */ 67, // 67
+      /* third stage */ 125, //120
       /* loading position */ 2
     };
     public static final double[] kAnglerPositions = {
       /* zero/horizontal */ 0.05,
       /* scoring position */ 2.35,//2.15,
       /* up/safe position */ 2.6,//2.5,
-      /* loading position */ 2.27//2.14, 2.3
+      /* loading position */ 2.2//2.14, 2.3
     };
     public static final double kHighP = 1;
     public static final double kLowP = 1;

@@ -73,6 +73,7 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Blue - Two and a Half Piece", 3);
     m_chooser.addOption("Center Park", 4);
     m_chooser.addOption("No Auto", 5);
+    m_chooser.addOption("Cable Auto", 6);
     SmartDashboard.putData("Auton Selector", m_chooser);
 
     // Shuffleboard.getTab("SmartDashboard").addInteger("Time", ()->(int)DriverStation.getMatchTime()).withWidget("Large Text");
@@ -137,11 +138,14 @@ public class Robot extends TimedRobot {
 
     if (ledController.getYButtonPressed()) {
       lightMode = 1;
+      m_robotContainer.setConeMode(true);
     } else if (ledController.getBButtonPressed()) {
       lightMode = 2;
+      m_robotContainer.setConeMode(false);
     } else if (ledController.getXButtonPressed()) {
       lightMode = 3;
       animStart = 0;
+      m_robotContainer.setConeMode(false);
     } else if (ledController.getAButtonPressed()) {
       lightMode = 0;
       animStart = 0;
@@ -170,8 +174,8 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_chooser.getSelected());
-
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_chooser.getSelected());
+    
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();

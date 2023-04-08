@@ -204,7 +204,7 @@ public final class Autos {
 
     drive.resetGyro(0);
 
-    CustomAutoBuilder autoBuilder = new CustomAutoBuilder(
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
       drive::getPose, // Pose2d supplier
       drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
       DriveConstants.kDriveKinematics, // SwerveDriveKinematics

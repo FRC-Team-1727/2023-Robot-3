@@ -20,6 +20,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -126,6 +127,7 @@ public class RobotContainer {
 
   public void driverInit() {
     m_elevatorSubsystem.driverInit().schedule();
+    setConeMode(true);
   }
 
   /**
@@ -143,6 +145,7 @@ public class RobotContainer {
       case 3: return Autos.blueLoadingThree(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
       case 4: return Autos.middlePark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
       case 5: return Commands.none();
+      case 6: return Autos.cableThree(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
 
       default:
         return Autos.middlePark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
@@ -152,5 +155,9 @@ public class RobotContainer {
 
   public boolean holdingObject() {
     return m_intakeSubsystem.holdingObject();
+  }
+
+  public void setConeMode(boolean mode) {
+    m_intakeSubsystem.setConeMode(mode);
   }
 }

@@ -278,8 +278,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // SmartDashboard.putNumber("elevator encoder", elevatorMotor.getEncoder().getPosition());
-    // SmartDashboard.putNumber("angler encoder", angler.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
+    SmartDashboard.putNumber("elevator encoder", elevatorMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("angler encoder", angler.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
     // SmartDashboard.putNumber("angler motor encoder", angler.getEncoder().getPosition());
     // SmartDashboard.putNumber("elevator target", elevation);
     // SmartDashboard.putNumber("angler target", angle);
