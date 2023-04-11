@@ -85,6 +85,10 @@ public class IntakeSubsystem extends SubsystemBase {
     return runOnce(()->outtake(spd.getAsDouble()));
   }
 
+  public CommandBase setSpeed(DoubleSupplier spd) {
+    return runOnce(()->intake.set(spd.getAsDouble()));
+  }
+
   public boolean holdingObject() {
     return Math.abs(intake.getEncoder().getVelocity()) < 200;
   }

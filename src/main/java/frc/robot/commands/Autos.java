@@ -99,6 +99,14 @@ public final class Autos {
     );
   }
 
+  public static CommandBase throwCube(ElevatorSubsystem elevator, IntakeSubsystem intake) {
+    return Commands.sequence(
+      intake.setSpeed(()->-1),
+      new WaitCommand(1),
+      intake.intakeCommand(()->0)
+    );
+  }
+
   public static CommandBase middlePark(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("park", new PathConstraints(1, 1), new PathConstraints(0.5, 1));
 
@@ -119,8 +127,8 @@ public final class Autos {
     return autoBuilder.fullAuto(pathGroup);
   }
 
-  public static CommandBase redLoadingThree(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("red_loading_three", new PathConstraints(3, 3), new PathConstraints(2, 2));
+  public static CommandBase redLoadingTwoHalf(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("red_loading_two_half", new PathConstraints(3, 3), new PathConstraints(2, 2));
 
     drive.resetGyro(0);
 
@@ -139,8 +147,8 @@ public final class Autos {
     return autoBuilder.fullAuto(pathGroup);
   }
 
-  public static CommandBase blueLoadingThree(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("blue_loading_three", new PathConstraints(3, 3), new PathConstraints(2, 2));
+  public static CommandBase blueLoadingTwoHalf(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("blue_loading_two_half", new PathConstraints(3, 3), new PathConstraints(2, 2));
 
     drive.resetGyro(0);
 
