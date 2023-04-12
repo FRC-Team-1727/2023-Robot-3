@@ -145,7 +145,11 @@ public class RobotContainer {
       case 3: return Autos.blueLoadingTwoHalf(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
       case 4: return Autos.middlePark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
       case 5: return Commands.none();
-      case 6: return Autos.cableThree(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+      case 6: return Autos.cableTwoHalf(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+      case 7: return Autos.blueLoadingThree(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+      case 8: return Autos.highConeFast(m_elevatorSubsystem, m_intakeSubsystem);
+      case 9: return Autos.middleTwo(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+      case 10: return Autos.throwFar(m_elevatorSubsystem, m_intakeSubsystem);
 
       default:
         return Autos.middlePark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);

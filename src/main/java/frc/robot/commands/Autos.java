@@ -36,6 +36,7 @@ public final class Autos {
     eventMap.put("firstCone", highConeAuto(elevator, intake));
     eventMap.put("intake", intake.intakeCommand(()->1));
     eventMap.put("stopIntake", intake.intakeCommand(()->0));
+    eventMap.put("outtake", intake.outtakeCommand(()->1));
     eventMap.put("drivePosition", elevator.drivePosition());
     eventMap.put("intakePosition", elevator.intakePosition());
     eventMap.put("angleScore", elevator.setAnglePosition(()->1));
@@ -43,8 +44,10 @@ public final class Autos {
     eventMap.put("elevator1", elevator.setPosition(()->1));
     eventMap.put("elevator2", elevator.setPosition(()->2));
     eventMap.put("scoreHigh", scoreHigh(elevator, intake));
-    eventMap.put("firstConeSafe", highConeSafe(elevator, intake));
+    eventMap.put("firstConeFast", highConeFast(elevator, intake));
     eventMap.put("setX", new RunCommand(()->drive.setX(), drive));
+    eventMap.put("throw", throwCube(elevator, intake));
+    eventMap.put("throwFar", throwFar(elevator, intake));
   }
 
   public static CommandBase highConeAuto(ElevatorSubsystem elevator, IntakeSubsystem intake) {
@@ -59,12 +62,12 @@ public final class Autos {
     return auto;
   }
 
-  public static CommandBase highConeSafe(ElevatorSubsystem elevator, IntakeSubsystem intake) {
+  public static CommandBase highConeFast(ElevatorSubsystem elevator, IntakeSubsystem intake) {
     CommandBase auto = Commands.sequence(
       elevator.setAnglePosition(()->1),
       elevator.setPosition(()->2),
-      new WaitCommand(1.5),
-      scoreHighSafe(elevator, intake)
+      new WaitCommand(0.75),
+      scoreHighFast(elevator, intake)
     );
 
     auto.addRequirements(intake);
@@ -85,14 +88,14 @@ public final class Autos {
     );
   }
 
-  public static CommandBase scoreHighSafe(ElevatorSubsystem elevator, IntakeSubsystem intake) {
+  public static CommandBase scoreHighFast(ElevatorSubsystem elevator, IntakeSubsystem intake) {
     return Commands.sequence(
       elevator.slowAngler(),
       elevator.setAngle(()->2.0),
-      new WaitCommand(1),
-      elevator.setPosition(()->0),
-      intake.outtakeCommand(()->1),
       new WaitCommand(0.5),
+      elevator.setPosition(()->0),
+      intake.outtakeCommand(()->2),
+      new WaitCommand(0.3),
       elevator.drivePosition(),
       intake.intakeCommand(()->0),
       elevator.setAnglerNormalSpeed()
@@ -101,9 +104,23 @@ public final class Autos {
 
   public static CommandBase throwCube(ElevatorSubsystem elevator, IntakeSubsystem intake) {
     return Commands.sequence(
+      intake.setSpeed(()->0.5),
+      new WaitCommand(0.25),
       intake.setSpeed(()->-1),
       new WaitCommand(1),
       intake.intakeCommand(()->0)
+    );
+  }
+
+  public static CommandBase throwFar(ElevatorSubsystem elevator, IntakeSubsystem intake) {
+    return Commands.sequence(
+      intake.setSpeed(()->0.5),
+      elevator.setPosition(()->1),
+      new WaitCommand(0.35),
+      intake.setSpeed(()->-1),
+      new WaitCommand(0.5),
+      intake.intakeCommand(()->0),
+      elevator.drivePosition()
     );
   }
 
@@ -207,8 +224,48 @@ public final class Autos {
     return autoBuilder.fullAuto(pathGroup);
   }
 
-  public static CommandBase cableThree(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("red_cable_three", new PathConstraints(3, 3), new PathConstraints(1, 1), new PathConstraints(3, 3), new PathConstraints(1, 1), new PathConstraints(2, 2));
+  public static CommandBase cableTwoHalf(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("cable_two_half", new PathConstraints(3, 3), new PathConstraints(1, 1), new PathConstraints(2, 2), new PathConstraints(1, 1), new PathConstraints(2, 2));
+
+    drive.resetGyro(0);
+
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+      drive::getPose, // Pose2d supplier
+      drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+      DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+      new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+      new PIDConstants(1, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+      drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+      eventMap,
+      true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+      drive // The drive subsystem. Used to properly set the requirements of path following commands
+    );
+
+    return autoBuilder.fullAuto(pathGroup);
+  }
+
+  public static CommandBase blueLoadingThree(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("blue_loading_three", new PathConstraints(4, 4));
+
+    drive.resetGyro(0);
+
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+      drive::getPose, // Pose2d supplier
+      drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+      DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+      new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+      new PIDConstants(1, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+      drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+      eventMap,
+      true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+      drive // The drive subsystem. Used to properly set the requirements of path following commands
+    );
+
+    return autoBuilder.fullAuto(pathGroup);
+  }
+
+  public static CommandBase middleTwo(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("middle_two", new PathConstraints(1.25, 2), new PathConstraints(1, 1));
 
     drive.resetGyro(0);
 

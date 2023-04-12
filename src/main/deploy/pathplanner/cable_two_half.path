@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "firstCone"
+          "firstConeFast"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",
@@ -76,15 +76,15 @@
     },
     {
       "anchorPoint": {
-        "x": 6.642252049349706,
+        "x": 6.74,
         "y": 0.9139674336355808
       },
       "prevControl": {
-        "x": 5.899660557682312,
+        "x": 5.997408508332606,
         "y": 0.8187075330963549
       },
       "nextControl": {
-        "x": 5.899660557682312,
+        "x": 5.997408508332606,
         "y": 0.8187075330963549
       },
       "holonomicAngle": 0,
@@ -102,15 +102,15 @@
     {
       "anchorPoint": {
         "x": 4.947604099483734,
-        "y": 0.7330780457285386
+        "y": 0.53
       },
       "prevControl": {
         "x": 5.842530544918573,
-        "y": 0.7521190339292797
+        "y": 0.5490409882007411
       },
       "nextControl": {
         "x": 4.04256061963398,
-        "y": 0.7138218014764164
+        "y": 0.5107437557478778
       },
       "holonomicAngle": 90.0,
       "isReversal": false,
@@ -127,21 +127,73 @@
     {
       "anchorPoint": {
         "x": 3.0815872558110926,
-        "y": 0.73
+        "y": 0.53
       },
       "prevControl": {
-        "x": 3.5956939372311068,
-        "y": 0.7204795058996301
+        "x": 3.493465785609223,
+        "y": 0.552905419642171
       },
       "nextControl": {
-        "x": 2.2004752916839405,
-        "y": 0.7463168882245756
+        "x": 2.624603538993302,
+        "y": 0.5045861873196431
       },
       "holonomicAngle": 90.0,
       "isReversal": false,
       "velOverride": 1.0,
       "isLocked": false,
       "isStopPoint": true,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.9772099401681,
+        "y": 1.1043773156429928
+      },
+      "prevControl": {
+        "x": 2.6727926416862537,
+        "y": 1.1043773156429928
+      },
+      "nextControl": {
+        "x": 2.6727926416862537,
+        "y": 1.1043773156429928
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "firstConeFast"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.2339151614170225,
+        "y": 0.6854755752266852
+      },
+      "prevControl": {
+        "x": 2.7483699622981206,
+        "y": 0.7425985398289086
+      },
+      "nextControl": {
+        "x": 3.7194603605359244,
+        "y": 0.6283526106244619
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
@@ -151,12 +203,12 @@
     },
     {
       "anchorPoint": {
-        "x": 1.8058410463614287,
-        "y": 1.608963502962636
+        "x": 5.823489556717832,
+        "y": 0.6569140929255742
       },
       "prevControl": {
-        "x": 2.501423747879583,
-        "y": 1.608963502962636
+        "x": 4.879759323772699,
+        "y": 0.6569140929255742
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -165,9 +217,7 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "scoreHigh"
-        ],
+        "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -179,7 +229,7 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 1.7018181818181595,
+      "position": 2.269090909090843,
       "names": [
         "intakePosition"
       ]
@@ -195,13 +245,6 @@
       "names": [
         "stopIntake",
         "drivePosition"
-      ]
-    },
-    {
-      "position": 5.0,
-      "names": [
-        "elevator2",
-        "angleScore"
       ]
     },
     {
