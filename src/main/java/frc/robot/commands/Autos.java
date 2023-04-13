@@ -47,7 +47,8 @@ public final class Autos {
     eventMap.put("firstConeFast", highConeFast(elevator, intake));
     eventMap.put("setX", new RunCommand(()->drive.setX(), drive));
     eventMap.put("throw", throwCube(elevator, intake));
-    eventMap.put("throwFar", throwFar(elevator, intake));
+    eventMap.put("throwFar", throwFar(elevator, intake, drive));
+    eventMap.put("balance", new BalanceCommand(drive));
   }
 
   public static CommandBase highConeAuto(ElevatorSubsystem elevator, IntakeSubsystem intake) {
@@ -112,8 +113,9 @@ public final class Autos {
     );
   }
 
-  public static CommandBase throwFar(ElevatorSubsystem elevator, IntakeSubsystem intake) {
-    return Commands.sequence(
+  public static CommandBase throwFar(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    CommandBase result = Commands.sequence(
+      drive.setXCommand(),
       intake.setSpeed(()->0.5),
       elevator.setPosition(()->1),
       new WaitCommand(0.35),
@@ -122,6 +124,8 @@ public final class Autos {
       intake.intakeCommand(()->0),
       elevator.drivePosition()
     );
+    result.addRequirements(drive);
+    return result;
   }
 
   public static CommandBase middlePark(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
@@ -225,7 +229,7 @@ public final class Autos {
   }
 
   public static CommandBase cableTwoHalf(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("cable_two_half", new PathConstraints(3, 3), new PathConstraints(1, 1), new PathConstraints(2, 2), new PathConstraints(1, 1), new PathConstraints(2, 2));
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("cable_two_half", new PathConstraints(3, 2.5), new PathConstraints(1, 1), new PathConstraints(2, 1.5), new PathConstraints(1, 1), new PathConstraints(2, 2));
 
     drive.resetGyro(0);
 
@@ -264,8 +268,48 @@ public final class Autos {
     return autoBuilder.fullAuto(pathGroup);
   }
 
+  public static CommandBase blueLoadingTwoPark(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("blue_loading_two_park", new PathConstraints(4, 4), new PathConstraints(1, 1));
+
+    drive.resetGyro(0);
+
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+      drive::getPose, // Pose2d supplier
+      drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+      DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+      new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+      new PIDConstants(1, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+      drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+      eventMap,
+      true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+      drive // The drive subsystem. Used to properly set the requirements of path following commands
+    );
+
+    return autoBuilder.fullAuto(pathGroup);
+  }
+
   public static CommandBase middleTwo(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("middle_two", new PathConstraints(1.25, 2), new PathConstraints(1, 1));
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("middle_two", new PathConstraints(1.25, 2), new PathConstraints(3, 3), new PathConstraints(2, 2), new PathConstraints(1, 1));
+
+    drive.resetGyro(0);
+
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+      drive::getPose, // Pose2d supplier
+      drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+      DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+      new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+      new PIDConstants(1.25, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+      drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+      eventMap,
+      true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+      drive // The drive subsystem. Used to properly set the requirements of path following commands
+    );
+
+    return autoBuilder.fullAuto(pathGroup);
+  }
+
+  public static CommandBase cableTwoPark(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("cable_two_park", new PathConstraints(3, 2.5), new PathConstraints(2, 2), new PathConstraints(3, 2.5), new PathConstraints(2, 2), new PathConstraints(2, 2));
 
     drive.resetGyro(0);
 

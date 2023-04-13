@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utils.SwerveUtils;
 import frc.robot.Constants.DriveConstants;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -93,7 +94,7 @@ public class DriveSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("heading", getHeading());
     SmartDashboard.putNumber("x", getPose().getX());
     SmartDashboard.putNumber("y", getPose().getY());
-    // SmartDashboard.putNumber("pitch", getPitch());
+    SmartDashboard.putNumber("pitch", getPitch());
   }
 
   /**
@@ -217,6 +218,12 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
 
+  public CommandBase setXCommand() {
+    return runOnce(
+      ()->{setX();}
+    );
+  }
+
   /**
    * Sets the swerve ModuleStates.
    *
@@ -263,6 +270,6 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public double getPitch() {
-    return m_gyro.getPitch();
+    return m_gyro.getRoll();
   }
 }

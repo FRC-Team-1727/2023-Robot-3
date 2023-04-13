@@ -30,8 +30,8 @@ public class BalanceCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pidController = new PIDController(0, 0, 0);
-    pidController.setSetpoint(0);
+    pidController = new PIDController(0.02, 0, 0.00);
+    pidController.setSetpoint(1.33);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,7 +48,9 @@ public class BalanceCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_subsystem.setX();
+  }
 
   // Returns true when the command should end.
   @Override

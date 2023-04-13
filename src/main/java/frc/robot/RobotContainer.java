@@ -8,6 +8,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ScoreCommand;
 import frc.robot.commands.ZeroElevatorCommand;
@@ -141,7 +142,7 @@ public class RobotContainer {
     switch (auto) {
       case 0: return Autos.redLoadingPark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
       case 1: return Autos.redLoadingTwoHalf(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
-      case 2: return Autos.blueLoadingPark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+      case 2: return Autos.blueLoadingTwoPark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
       case 3: return Autos.blueLoadingTwoHalf(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
       case 4: return Autos.middlePark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
       case 5: return Commands.none();
@@ -149,7 +150,9 @@ public class RobotContainer {
       case 7: return Autos.blueLoadingThree(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
       case 8: return Autos.highConeFast(m_elevatorSubsystem, m_intakeSubsystem);
       case 9: return Autos.middleTwo(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
-      case 10: return Autos.throwFar(m_elevatorSubsystem, m_intakeSubsystem);
+      case 10: return Autos.throwFar(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+      case 11: return new BalanceCommand(m_robotDrive);
+      case 12: return Autos.cableTwoPark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
 
       default:
         return Autos.middlePark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);

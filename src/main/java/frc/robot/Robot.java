@@ -73,11 +73,13 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Blue - Two and a Half Piece", 3);
     m_chooser.addOption("Center Park", 4);
     m_chooser.addOption("No Auto", 5);
-    m_chooser.addOption("Cable Auto", 6);
+    m_chooser.addOption("Cable - Two and a Half Piece", 6);
     m_chooser.addOption("Blue - Three Piece", 7);
     m_chooser.addOption("Score Preload", 8);
     m_chooser.addOption("Center - Two + Park", 9);
     m_chooser.addOption("Throw Far", 10);
+    m_chooser.addOption("Balance", 11);
+    m_chooser.addOption("Cable - Two + Park", 12);
     SmartDashboard.putData("Auton Selector", m_chooser);
 
     // Shuffleboard.getTab("SmartDashboard").addInteger("Time", ()->(int)DriverStation.getMatchTime()).withWidget("Large Text");

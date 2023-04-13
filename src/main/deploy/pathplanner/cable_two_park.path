@@ -39,7 +39,7 @@
       },
       "holonomicAngle": 90.0,
       "isReversal": false,
-      "velOverride": 1.0,
+      "velOverride": 2.0,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
@@ -64,7 +64,7 @@
       },
       "holonomicAngle": 90.0,
       "isReversal": false,
-      "velOverride": 1.0,
+      "velOverride": 2.0,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
@@ -114,7 +114,7 @@
       },
       "holonomicAngle": 90.0,
       "isReversal": false,
-      "velOverride": 1.0,
+      "velOverride": 2.0,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
@@ -139,7 +139,7 @@
       },
       "holonomicAngle": 90.0,
       "isReversal": false,
-      "velOverride": 1.0,
+      "velOverride": 2.0,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
@@ -178,37 +178,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.2339151614170225,
-        "y": 0.44746322271741984
+        "x": 3.900349748442966,
+        "y": 1.58
       },
       "prevControl": {
-        "x": 2.7483699622981206,
-        "y": 0.5045861873196432
-      },
-      "nextControl": {
-        "x": 3.7194603605359244,
-        "y": 0.3903402581151965
-      },
-      "holonomicAngle": 180.0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 5.823489556717832,
-        "y": 0.6569140929255742
-      },
-      "prevControl": {
-        "x": 4.879759323772699,
-        "y": 0.6569140929255742
+        "x": 1.8629640109636527,
+        "y": 1.5609590117992576
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -252,6 +227,12 @@
       "names": [
         "scoreCone",
         "drivePosition"
+      ]
+    },
+    {
+      "position": 5.447272727272438,
+      "names": [
+        "elevator1"
       ]
     }
   ]
