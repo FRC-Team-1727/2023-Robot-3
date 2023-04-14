@@ -166,5 +166,10 @@ public class RobotContainer {
 
   public void setConeMode(boolean mode) {
     m_intakeSubsystem.setConeMode(mode);
+    m_elevatorSubsystem.setConeMode(mode);
+  }
+
+  public void setShooting(boolean shooting) {
+    m_intakeSubsystem.setShooting(shooting);
   }
 }

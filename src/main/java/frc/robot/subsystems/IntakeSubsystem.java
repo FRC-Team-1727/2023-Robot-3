@@ -25,6 +25,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private SparkMaxPIDController intakeController = intake.getPIDController();
   private double currentPosition;
   private boolean coneMode;
+  private boolean shooting;
   
   public IntakeSubsystem() {
     intake.setIdleMode(IdleMode.kBrake);
@@ -36,6 +37,7 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeController.setOutputRange(-1, 1);
     // intake.setInverted(true);
     coneMode = false;
+    shooting = false;
   }
 
   /**
@@ -50,10 +52,11 @@ public class IntakeSubsystem extends SubsystemBase {
       // intakeController.setReference(-kOuttakeSpeed, ControlType.kVelocity);
       // System.out.println("outtaking");
       outtake(1);
-    } else 
-    if (spd.getAsDouble() < 0.1) {
+    } else if (spd.getAsDouble() < 0.1) {
       // intakeController.setReference(currentPosition, ControlType.kPosition);
-      if (coneMode) {
+      if (shooting) {
+        intake.set(-1);
+      } else if (coneMode) {
         intake.set(0.1);
       } else {
         intake.set(0.05);
@@ -95,6 +98,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void setConeMode(boolean mode) {
     coneMode = mode;
+  }
+
+  public void setShooting(boolean shooting) {
+    this.shooting = shooting;
   }
   
 

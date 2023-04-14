@@ -180,6 +180,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    m_robotContainer.setConeMode(true);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_chooser.getSelected());
     
     // schedule the autonomous command (example)
@@ -223,6 +224,8 @@ public class Robot extends TimedRobot {
     }
 
     m_led.setData(m_ledBuffer);
+
+    m_robotContainer.setShooting(ledController.getRightTriggerAxis() > 0.2);
   }
 
   @Override

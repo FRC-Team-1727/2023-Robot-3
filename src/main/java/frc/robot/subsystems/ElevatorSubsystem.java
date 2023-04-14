@@ -31,6 +31,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private int position;
   private int anglePosition;
   private boolean recovering;
+  private boolean coneMode;
   
   /** Creates a new ElevatorSubsystem. */
   public ElevatorSubsystem() {
@@ -167,7 +168,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     return runOnce(
       () -> {
         this.position = position.getAsInt();
-        this.elevation = kElevatorPositions[position.getAsInt()];
+        if (coneMode) {
+          this.elevation = kElevatorPositions[position.getAsInt()];
+        } else {
+          this.elevation = kCubePositions[position.getAsInt()];
+        }
         // System.out.println("setting position" + " " + elevation + " " + position);
       }).andThen(updateElevator());
   }
@@ -206,10 +211,14 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void setAnglePosition(int position) {
+    if (!coneMode && position == 1) {
+      angle = kCubeAngle;
+    } else {
       angle = kAnglerPositions[position];
-      anglePosition = position;
-      angler.getPIDController().setReference(angle, ControlType.kPosition);
-      recovering = false;
+    }
+    anglePosition = position;
+    angler.getPIDController().setReference(angle, ControlType.kPosition);
+    recovering = false;
   }
 
   public void runLowVoltage() {
@@ -263,6 +272,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         angler.getPIDController().setReference(this.angle, ControlType.kPosition);
       }
     );
+  }
+
+  public void setConeMode(boolean mode) {
+    coneMode = mode;
   }
 
   /**
