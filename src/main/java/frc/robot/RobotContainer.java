@@ -44,6 +44,7 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OIConstants.kDriverControllerPort);
 
+  private final CommandXboxController m_altController = new CommandXboxController(1);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -54,10 +55,13 @@ public class RobotContainer {
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            () -> m_robotDrive.drive(
+            () -> m_robotDrive.driveAlt(
               -MathUtil.applyDeadband(m_driverController.getRightY(), OIConstants.kDriveDeadband),
               -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
               -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+              -MathUtil.applyDeadband(m_altController.getRightY(), OIConstants.kDriveDeadband),
+              -MathUtil.applyDeadband(m_altController.getRightX(), OIConstants.kDriveDeadband),
+              -MathUtil.applyDeadband(m_altController.getLeftX(), OIConstants.kDriveDeadband),
               false, true),
             m_robotDrive));
 

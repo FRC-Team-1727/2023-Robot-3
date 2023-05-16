@@ -208,6 +208,14 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
+  public void driveAlt(double masterXSpeed, double masterYSpeed, double masterRot, double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+    if (masterXSpeed > 0 || masterYSpeed > 0 || masterRot > 0) {
+      drive(masterXSpeed, masterYSpeed, masterRot, fieldRelative, rateLimit);
+    } else {
+      drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit);
+    }
+  }
+  
   /**
    * Sets the wheels into an X formation to prevent movement.
    */
