@@ -59,9 +59,9 @@ public class RobotContainer {
               -MathUtil.applyDeadband(m_driverController.getRightY(), OIConstants.kDriveDeadband),
               -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
               -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-              -MathUtil.applyDeadband(m_altController.getRightY(), OIConstants.kDriveDeadband),
-              -MathUtil.applyDeadband(m_altController.getRightX(), OIConstants.kDriveDeadband),
-              -MathUtil.applyDeadband(m_altController.getLeftX(), OIConstants.kDriveDeadband),
+              -MathUtil.applyDeadband(m_altController.getRightY(), 0.12),
+              -MathUtil.applyDeadband(m_altController.getRightX(), 0.12),
+              -MathUtil.applyDeadband(m_altController.getLeftX(), 0.12),
               false, true),
             m_robotDrive));
 

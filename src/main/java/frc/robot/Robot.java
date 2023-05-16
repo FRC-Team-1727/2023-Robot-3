@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
 
   private SendableChooser<Integer> m_chooser = new SendableChooser<>();
 
-  XboxController ledController = new XboxController(1);
+  // XboxController ledController = new XboxController(1);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -141,21 +141,22 @@ public class Robot extends TimedRobot {
     }
 
     m_led.setData(m_ledBuffer);
-
-    if (ledController.getYButtonPressed()) {
-      lightMode = 1;
-      m_robotContainer.setConeMode(true);
-    } else if (ledController.getBButtonPressed()) {
-      lightMode = 2;
-      m_robotContainer.setConeMode(false);
-    } else if (ledController.getXButtonPressed()) {
-      lightMode = 3;
-      animStart = 0;
-      m_robotContainer.setConeMode(false);
-    } else if (ledController.getAButtonPressed()) {
-      lightMode = 0;
-      animStart = 0;
-    }
+    lightMode = 3;
+    m_robotContainer.setConeMode(true);
+    // if (ledController.getYButtonPressed()) {
+    //   lightMode = 1;
+    //   m_robotContainer.setConeMode(true);
+    // } else if (ledController.getBButtonPressed()) {
+    //   lightMode = 2;
+    //   m_robotContainer.setConeMode(false);
+    // } else if (ledController.getXButtonPressed()) {
+    //   lightMode = 3;
+    //   animStart = 0;
+    //   m_robotContainer.setConeMode(false);
+    // } else if (ledController.getAButtonPressed()) {
+    //   lightMode = 0;
+    //   animStart = 0;
+    // }
 
     // SmartDashboard.putNumber("auto number", m_chooser.getSelected());
 
@@ -225,7 +226,8 @@ public class Robot extends TimedRobot {
 
     m_led.setData(m_ledBuffer);
 
-    m_robotContainer.setDoubleLoading(ledController.getRightTriggerAxis() > 0.2);
+    // m_robotContainer.setDoubleLoading(ledController.getRightTriggerAxis() > 0.2);
+    m_robotContainer.setDoubleLoading(false);
   }
 
   @Override
