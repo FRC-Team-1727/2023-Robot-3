@@ -126,11 +126,11 @@
     },
     {
       "anchorPoint": {
-        "x": 3.95,
+        "x": 3.75,
         "y": 2.18
       },
       "prevControl": {
-        "x": 3.948911230744078,
+        "x": 3.7489112307440777,
         "y": 2.1801931489848734
       },
       "nextControl": null,
@@ -142,7 +142,7 @@
       "stopEvent": {
         "names": [
           "balance",
-          "throwFar"
+          "setX"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",

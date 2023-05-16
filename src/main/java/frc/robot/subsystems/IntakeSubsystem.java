@@ -12,7 +12,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import static frc.robot.Constants.IntakeConstants.*;
 
 import java.util.function.BooleanSupplier;
@@ -51,13 +54,15 @@ public class IntakeSubsystem extends SubsystemBase {
     if (!outtaking.getAsBoolean()) {
       // intakeController.setReference(-kOuttakeSpeed, ControlType.kVelocity);
       // System.out.println("outtaking");
-      outtake(1);
+      
+        outtake(1);
     } else if (spd.getAsDouble() < 0.1) {
       // intakeController.setReference(currentPosition, ControlType.kPosition);
-      if (shooting) {
-        intake.set(-1);
-      } else if (coneMode) {
-        intake.set(0.1);
+      // if (shooting) {
+      //   intake.set(-1);
+      // } else 
+      if (coneMode) {
+        intake.set(0.15);
       } else {
         intake.set(0.05);
       }
@@ -72,6 +77,37 @@ public class IntakeSubsystem extends SubsystemBase {
     // System.out.println(outtaking.getAsBoolean());
   }
 
+  public void intake(DoubleSupplier spd, BooleanSupplier outtaking, BooleanSupplier elevatorIn) {
+    if (!outtaking.getAsBoolean()) {
+      // intakeController.setReference(-kOuttakeSpeed, ControlType.kVelocity);
+      // System.out.println("outtaking");
+      if (elevatorIn.getAsBoolean()) {
+        intake.set(-1);
+      } else {
+        outtake(1);
+      }
+    } else if (spd.getAsDouble() < 0.1) {
+      // intakeController.setReference(currentPosition, ControlType.kPosition);
+      // if (shooting) {
+      //   intake.set(-1);
+      // } else 
+      if (coneMode) {
+        intake.set(0.15);
+      } else {
+        intake.set(0.05);
+      }
+      // System.out.println("passive");
+    } else {
+      intake.set(spd.getAsDouble() * kIntakeSpeed);
+      currentPosition = intake.getEncoder().getPosition();
+      // intakeController.setReference(kIntakeSpeed, ControlType.kVelocity);
+      // System.out.println("intaking");
+    }
+
+    // System.out.println(outtaking.getAsBoolean());
+  }
+
+  
   public void outtake(double spd) {
       intake.set(spd * kOuttakeSpeed);
   }
@@ -100,7 +136,7 @@ public class IntakeSubsystem extends SubsystemBase {
     coneMode = mode;
   }
 
-  public void setShooting(boolean shooting) {
+  public void setDoubleLoading(boolean shooting) {
     this.shooting = shooting;
   }
   

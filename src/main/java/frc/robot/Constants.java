@@ -151,17 +151,17 @@ public final class Constants {
     };
     public static final int[] kCubePositions = {
       /* default/intaking */ 2,
-      /* second stage */ 47, // 67
-      /* third stage */ 105, //120
+      /* second stage */ 40, // 67
+      /* third stage */ 95, //120
       /* loading position */ 2
     };
     public static final double[] kAnglerPositions = {
       /* zero/horizontal */ 0.05,
       /* scoring position */ 2.35,//2.15,
       /* up/safe position */ 2.6,//2.5,
-      /* loading position */ 2.2//2.14, 2.3
+      /* loading position */ 2.25, //2.2 at CHCMP
     };
-    public static final double kCubeAngle = 2.15;
+    public static final double kCubeAngle = 2;
     public static final double kHighP = 1;
     public static final double kLowP = 1;
     public static final double kHighI = 0.000001;

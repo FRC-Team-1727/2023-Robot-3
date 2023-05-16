@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "firstCone"
+          "firstConeFast"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",

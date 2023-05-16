@@ -65,7 +65,8 @@ public class RobotContainer {
       new RunCommand(
         () -> m_intakeSubsystem.intake(
           ()->m_driverController.getRightTriggerAxis() + (m_driverController.rightBumper().getAsBoolean() ? 2 : 0),
-          ()->m_driverController.povCenter().getAsBoolean()),
+          ()->m_driverController.povCenter().getAsBoolean(),
+          ()->m_elevatorSubsystem.inDrivePosition()),
           m_intakeSubsystem));
 
     //updates elevator position & angle
@@ -114,7 +115,6 @@ public class RobotContainer {
     // m_driverController.rightTrigger().onFalse(m_elevatorSubsystem.drivePosition());
     m_driverController.rightBumper().whileTrue(new IntakeCommand(m_intakeSubsystem, m_elevatorSubsystem, true));
     // m_driverController.x().onTrue(new RunCommand(()->m_robotDrive.resetGyro(0), m_robotDrive));
-
     /* controls:
      * RS - forward, backward, strafe
      * LS - turning
@@ -169,7 +169,7 @@ public class RobotContainer {
     m_elevatorSubsystem.setConeMode(mode);
   }
 
-  public void setShooting(boolean shooting) {
-    m_intakeSubsystem.setShooting(shooting);
+  public void setDoubleLoading(boolean shooting) {
+    m_intakeSubsystem.setDoubleLoading(shooting);
   }
 }

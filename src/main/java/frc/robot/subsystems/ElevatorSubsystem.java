@@ -288,6 +288,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     return false;
   }
 
+  public boolean inDrivePosition() {
+    return position == 0 && anglePosition == 2;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

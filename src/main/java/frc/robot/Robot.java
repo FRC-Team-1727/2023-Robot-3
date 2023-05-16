@@ -67,18 +67,18 @@ public class Robot extends TimedRobot {
     sim = new AddressableLEDSim(m_led);
     sim.setRunning(true);
 
-    m_chooser.setDefaultOption("Red - Two Piece + Park", 0);
-    m_chooser.addOption("Red - Two and a Half Piece", 1);
-    m_chooser.addOption("Blue - Two Piece + Park", 2);
-    m_chooser.addOption("Blue - Two and a Half Piece", 3);
-    m_chooser.addOption("Center Park", 4);
+    m_chooser.setDefaultOption("old - Red - Two Piece + Park", 0);
+    m_chooser.addOption("old - Red - Two and a Half Piece", 1);
+    m_chooser.addOption("254 - Two Piece + Park", 2);
+    m_chooser.addOption("old - Blue - Two and a Half Piece", 3);
+    m_chooser.addOption("old - Center Park", 4);
     m_chooser.addOption("No Auto", 5);
     m_chooser.addOption("Cable - Two and a Half Piece", 6);
-    m_chooser.addOption("Blue - Three Piece", 7);
-    m_chooser.addOption("Score Preload", 8);
-    m_chooser.addOption("Center - Two + Park", 9);
-    m_chooser.addOption("Throw Far", 10);
-    m_chooser.addOption("Balance", 11);
+    m_chooser.addOption("254 Three Piece", 7);
+    m_chooser.addOption("Preload (don't move)", 8);
+    m_chooser.addOption("Center - Two + Park (throwing)", 9);
+    // m_chooser.addOption("Throw Far", 10);
+    // m_chooser.addOption("Balance", 11);
     m_chooser.addOption("Cable - Two + Park", 12);
     SmartDashboard.putData("Auton Selector", m_chooser);
 
@@ -225,7 +225,7 @@ public class Robot extends TimedRobot {
 
     m_led.setData(m_ledBuffer);
 
-    m_robotContainer.setShooting(ledController.getRightTriggerAxis() > 0.2);
+    m_robotContainer.setDoubleLoading(ledController.getRightTriggerAxis() > 0.2);
   }
 
   @Override
