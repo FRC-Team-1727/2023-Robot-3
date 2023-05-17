@@ -209,10 +209,12 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void driveAlt(double masterXSpeed, double masterYSpeed, double masterRot, double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
-    if (masterXSpeed > 0 || masterYSpeed > 0 || masterRot > 0) {
+    if (masterXSpeed != 0 || masterYSpeed != 0 || masterRot != 0) {
       drive(masterXSpeed, masterYSpeed, masterRot, fieldRelative, rateLimit);
+      SmartDashboard.putBoolean("master driving", true);
     } else {
       drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit);
+      SmartDashboard.putBoolean("master driving", false);
     }
   }
   
