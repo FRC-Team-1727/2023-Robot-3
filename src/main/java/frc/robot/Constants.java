@@ -132,7 +132,7 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int kIntakePort = 11;
     public static final double kIntakeSpeed = 0.8;
-    public static final double kOuttakeSpeed = -0.15;//-0.1;
+    public static final double kOuttakeSpeed = -1;//-0.15;
     public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
