@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -57,6 +58,9 @@ public class DriveSubsystem extends SubsystemBase {
   private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
+
+  private boolean snapping;
+  private PIDController snappingController = new PIDController(DriveConstants.kSnappingP, DriveConstants.kSnappingI, DriveConstants.kSnappingD);
 
 
   // Odometry class for tracking robot pose
@@ -143,6 +147,12 @@ public class DriveSubsystem extends SubsystemBase {
     double xSpeedCommanded;
     double ySpeedCommanded;
 
+    if (rot != 0) {
+      snapping = false;
+    } else if (snapping) {
+      rot = snappingController.calculate(-m_gyro.getAngle());
+    }
+
     if (rateLimit) {
       // Convert XY to polar for rate limiting
       double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
@@ -198,7 +208,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
-        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(m_gyro.getAngle()))
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle()))
         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
@@ -271,5 +281,15 @@ public class DriveSubsystem extends SubsystemBase {
 
   public double getPitch() {
     return m_gyro.getRoll();
+  }
+
+  public CommandBase startSnapping() {
+    return runOnce(
+      ()-> {
+        snapping = true;
+        snappingController.reset();
+        snappingController.setSetpoint(0);
+      }
+    );
   }
 }
