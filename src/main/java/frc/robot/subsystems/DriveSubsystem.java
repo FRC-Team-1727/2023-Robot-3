@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -76,6 +77,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    snappingController.setIntegratorRange(-0.5, 0.5);
   }
 
   @Override
@@ -94,7 +96,7 @@ public class DriveSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("FL Encoder", m_frontLeft.getEncoderValue());
     // SmartDashboard.putNumber("FL Turning Speed", m_frontLeft.getCurTurningSpeed());
     SmartDashboard.putNumber("gyro", m_gyro.getAngle());
-    // SmartDashboard.putNumber("gyro wrapped", m_gyro.getAngle() % 360);
+    SmartDashboard.putNumber("gyro wrapped", getGyroWrapped());
     // SmartDashboard.putNumber("heading", getHeading());
     SmartDashboard.putNumber("x", getPose().getX());
     SmartDashboard.putNumber("y", getPose().getY());
@@ -150,7 +152,7 @@ public class DriveSubsystem extends SubsystemBase {
     if (rot != 0) {
       snapping = false;
     } else if (snapping) {
-      rot = snappingController.calculate(-m_gyro.getAngle());
+      rot = MathUtil.clamp(snappingController.calculate(-getGyroWrapped()), -0.85, 0.85);
     }
 
     if (rateLimit) {
@@ -291,5 +293,11 @@ public class DriveSubsystem extends SubsystemBase {
         snappingController.setSetpoint(0);
       }
     );
+  }
+
+  private double getGyroWrapped() {
+    double angle = m_gyro.getAngle() % 360;
+    if (Math.abs(angle) > 180) angle = -Math.signum(angle) * 360 + angle;
+    return angle;
   }
 }
