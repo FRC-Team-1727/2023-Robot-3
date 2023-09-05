@@ -18,7 +18,9 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utils.SwerveUtils;
 import frc.robot.Constants.DriveConstants;
@@ -62,6 +64,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   private boolean snapping;
   private PIDController snappingController = new PIDController(DriveConstants.kSnappingP, DriveConstants.kSnappingI, DriveConstants.kSnappingD);
+  private boolean snapDirection;
 
 
   // Odometry class for tracking robot pose
@@ -76,9 +79,7 @@ public class DriveSubsystem extends SubsystemBase {
       });
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
-    snappingController.setIntegratorRange(-0.5, 0.5);
-  }
+  public DriveSubsystem() {}
 
   @Override
   public void periodic() {
@@ -153,6 +154,8 @@ public class DriveSubsystem extends SubsystemBase {
       snapping = false;
     } else if (snapping) {
       rot = MathUtil.clamp(snappingController.calculate(-getGyroWrapped()), -0.85, 0.85);
+      if (Math.abs(snappingController.getPositionError()) > 5) snappingController.setIntegratorRange(0, 0);
+      else snappingController.setIntegratorRange(-1, 1);
     }
 
     if (rateLimit) {
@@ -210,7 +213,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
-        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle()))
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle() + 180))
         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
@@ -290,7 +293,8 @@ public class DriveSubsystem extends SubsystemBase {
       ()-> {
         snapping = true;
         snappingController.reset();
-        snappingController.setSetpoint(0);
+        snapDirection = !snapDirection;
+        snappingController.setSetpoint(snapDirection ? 0 : (DriverStation.getAlliance() == Alliance.Red ? 90 : -90));
       }
     );
   }
