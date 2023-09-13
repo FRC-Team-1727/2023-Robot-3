@@ -64,7 +64,7 @@ public final class Constants {
 
     public static final boolean kGyroReversed = false;
 
-    public static final double kSnappingP = 0.02;
+    public static final double kSnappingP = 0.01;
     public static final double kSnappingI = 0.03;
     public static final double kSnappingD = 0.001;
   }

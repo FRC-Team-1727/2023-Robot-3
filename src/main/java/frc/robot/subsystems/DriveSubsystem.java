@@ -102,6 +102,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("x", getPose().getX());
     SmartDashboard.putNumber("y", getPose().getY());
     SmartDashboard.putNumber("pitch", getPitch());
+    SmartDashboard.putBoolean("snapping", snapping);
   }
 
   /**

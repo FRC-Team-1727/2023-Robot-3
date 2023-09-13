@@ -112,7 +112,7 @@ public class RobotContainer {
     ));
     m_driverController.a().onTrue(new ZeroElevatorCommand(m_elevatorSubsystem));
     m_driverController.b().onTrue(m_robotDrive.runOnce(()->m_robotDrive.resetGyro(0)));
-    m_driverController.x().onTrue(m_robotDrive.startSnapping());
+    m_driverController.back().onTrue(m_robotDrive.startSnapping());
     m_driverController.rightTrigger().whileTrue(new IntakeCommand(m_intakeSubsystem, m_elevatorSubsystem, ()->m_driverController.getRightTriggerAxis()));
     // m_driverController.rightTrigger().onFalse(m_elevatorSubsystem.drivePosition());
     m_driverController.rightBumper().whileTrue(new IntakeCommand(m_intakeSubsystem, m_elevatorSubsystem, true));
