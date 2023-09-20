@@ -67,6 +67,8 @@ public final class Constants {
     public static final double kSnappingP = 0.01;
     public static final double kSnappingI = 0.03;
     public static final double kSnappingD = 0.001;
+
+    public static final double kSnappingStartThreshold = 0.3;
   }
 
   public static final class ModuleConstants {

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MathUtil;
@@ -25,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utils.SwerveUtils;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -296,6 +299,19 @@ public class DriveSubsystem extends SubsystemBase {
         snappingController.reset();
         snapDirection = !snapDirection;
         snappingController.setSetpoint(snapDirection ? 0 : (DriverStation.getAlliance() == Alliance.Red ? 90 : -90));
+      }
+    );
+  }
+
+  public CommandBase startSnapping(DoubleSupplier x, DoubleSupplier y) {
+    return runOnce(
+      ()-> {
+        if (Math.sqrt(Math.pow(x.getAsDouble(), 2)+ Math.pow(y.getAsDouble(), 2)) >= DriveConstants.kSnappingStartThreshold) {
+          snapping = true;
+          snappingController.reset();
+          snapDirection = !snapDirection;
+          snappingController.setSetpoint(snapDirection ? 0 : (DriverStation.getAlliance() == Alliance.Red ? 90 : -90));
+        }
       }
     );
   }
