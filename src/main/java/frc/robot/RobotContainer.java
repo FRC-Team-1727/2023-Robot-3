@@ -17,11 +17,6 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -157,6 +152,7 @@ public class RobotContainer {
       case 10: return Autos.throwFar(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
       case 11: return new BalanceCommand(m_robotDrive);
       case 12: return Autos.cableTwoPark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+      case 13: return Autos.threeCone(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
 
       default:
         return Autos.middlePark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);

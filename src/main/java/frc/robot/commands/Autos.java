@@ -51,6 +51,20 @@ public final class Autos {
     eventMap.put("balance", new BalanceCommand(drive));
   }
 
+  public static CommandBase midCone(ElevatorSubsystem elevator, IntakeSubsystem intake) {
+    return Commands.sequence(
+      elevator.slowAngler(),
+      elevator.setAngle(()->2.0),
+      new WaitCommand(0.5),
+      elevator.setPosition(()->0),
+      intake.outtakeCommand(()->2),
+      new WaitCommand(0.3),
+      elevator.drivePosition(),
+      intake.intakeCommand(()->0),
+      elevator.setAnglerNormalSpeed()
+    );
+  }
+
   public static CommandBase highConeAuto(ElevatorSubsystem elevator, IntakeSubsystem intake) {
     CommandBase auto = Commands.sequence(
       elevator.setAnglePosition(()->1),
@@ -330,5 +344,25 @@ public final class Autos {
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
+  }
+
+  public static CommandBase threeCone(ElevatorSubsystem elevator, IntakeSubsystem intake, DriveSubsystem drive) {
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("three_cone", new PathConstraints(4, 4));
+
+    drive.resetGyro(0);
+
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+      drive::getPose, // Pose2d supplier
+      drive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+      DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+      new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+      new PIDConstants(1, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+      drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+      eventMap,
+      true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+      drive // The drive subsystem. Used to properly set the requirements of path following commands
+    );
+
+    return autoBuilder.fullAuto(pathGroup);
   }
 }

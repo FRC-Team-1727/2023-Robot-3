@@ -80,6 +80,7 @@ public class Robot extends TimedRobot {
     // m_chooser.addOption("Throw Far", 10);
     // m_chooser.addOption("Balance", 11);
     m_chooser.addOption("Cable - Two + Park", 12);
+    m_chooser.addOption("Three Cone", 13);
     SmartDashboard.putData("Auton Selector", m_chooser);
 
     // Shuffleboard.getTab("SmartDashboard").addInteger("Time", ()->(int)DriverStation.getMatchTime()).withWidget("Large Text");
