@@ -151,6 +151,8 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
 
+    snapping = false;
+
     double xSpeedCommanded;
     double ySpeedCommanded;
 

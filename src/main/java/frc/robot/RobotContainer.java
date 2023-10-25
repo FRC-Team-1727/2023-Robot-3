@@ -107,8 +107,8 @@ public class RobotContainer {
     ));
     m_driverController.a().onTrue(new ZeroElevatorCommand(m_elevatorSubsystem));
     m_driverController.b().onTrue(m_robotDrive.runOnce(()->m_robotDrive.resetGyro(0)));
-    m_driverController.back().onTrue(m_robotDrive.startSnapping());
-    m_driverController.rightBumper().onTrue(m_robotDrive.startSnapping(()->m_driverController.getRightX(), ()->m_driverController.getRightY()));
+    // m_driverController.back().onTrue(m_robotDrive.startSnapping());
+    // m_driverController.rightBumper().onTrue(m_robotDrive.startSnapping(()->m_driverController.getRightX(), ()->m_driverController.getRightY()));
 
     m_driverController.rightTrigger().whileTrue(new IntakeCommand(m_intakeSubsystem, m_elevatorSubsystem, ()->m_driverController.getRightTriggerAxis()));
     // m_driverController.rightTrigger().onFalse(m_elevatorSubsystem.drivePosition());
@@ -141,7 +141,7 @@ public class RobotContainer {
     switch (auto) {
       case 0: return Autos.redLoadingPark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
       case 1: return Autos.redLoadingTwoHalf(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
-      case 2: return Autos.blueLoadingTwoPark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
+      case 2: return Autos.blueLoadingPark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
       case 3: return Autos.blueLoadingTwoHalf(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
       case 4: return Autos.middlePark(m_elevatorSubsystem, m_intakeSubsystem, m_robotDrive);
       case 5: return Commands.none();

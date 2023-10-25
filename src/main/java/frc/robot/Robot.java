@@ -6,8 +6,12 @@ package frc.robot;
 
 import javax.swing.text.Utilities;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -22,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.LimelightHelpers.LimelightResults;
 import frc.robot.commands.Autos;
 
 /**
@@ -45,6 +50,10 @@ public class Robot extends TimedRobot {
 
   XboxController ledController = new XboxController(1);
 
+  // DoubleLogEntry poseXLog;
+  // DoubleLogEntry poseYLog;
+  // DoubleLogEntry poseRotationLog;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -67,21 +76,27 @@ public class Robot extends TimedRobot {
     sim = new AddressableLEDSim(m_led);
     sim.setRunning(true);
 
-    m_chooser.setDefaultOption("old - Red - Two Piece + Park", 0);
-    m_chooser.addOption("old - Red - Two and a Half Piece", 1);
-    m_chooser.addOption("254 - Two Piece + Park", 2);
-    m_chooser.addOption("old - Blue - Two and a Half Piece", 3);
-    m_chooser.addOption("old - Center Park", 4);
+    m_chooser.setDefaultOption("Red - Two Piece + Park", 0);
+    m_chooser.addOption("Red - Two and a Half Piece", 1);
+    m_chooser.addOption("Blue - Two Piece + Park", 2);
+    m_chooser.addOption("Blue - Two and a Half Piece", 3);
+    m_chooser.addOption("Center - Preload + Park", 4);
     m_chooser.addOption("No Auto", 5);
     m_chooser.addOption("Cable - Two and a Half Piece", 6);
-    m_chooser.addOption("254 Three Piece", 7);
+    // m_chooser.addOption("254 Three Piece (cubes)", 7);
     m_chooser.addOption("Preload (don't move)", 8);
-    m_chooser.addOption("Center - Two + Park (throwing)", 9);
+    // m_chooser.addOption("Center - Two + Park (throwing)", 9);
     // m_chooser.addOption("Throw Far", 10);
     // m_chooser.addOption("Balance", 11);
-    m_chooser.addOption("Cable - Two + Park", 12);
-    m_chooser.addOption("Three Cone", 13);
+    // m_chooser.addOption("Cable - Two + Park", 12);
+    // m_chooser.addOption("Three Cone (254 path)", 13);
     SmartDashboard.putData("Auton Selector", m_chooser);
+
+    // DataLogManager.start();
+    // DataLog log = DataLogManager.getLog();
+    // poseXLog = new DoubleLogEntry(log, "/pose/x");
+    // poseYLog = new DoubleLogEntry(log, "/pose/y");
+    // poseRotationLog = new DoubleLogEntry(log, "/pose/rotation");
 
     // Shuffleboard.getTab("SmartDashboard").addInteger("Time", ()->(int)DriverStation.getMatchTime()).withWidget("Large Text");
   }
@@ -167,6 +182,20 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Time", time);
     
   // SmartDashboard.putNumber("auto number", (int)m_chooser.getSelected());
+
+    //log apriltag pose
+    // LimelightResults llResults = LimelightHelpers.getLatestResults("");
+    // if (llResults.targetingResults.targets_Fiducials.length > 0) {
+    //   Pose3d pose;
+    //   if (DriverStation.getAlliance() == Alliance.Blue) {
+    //     pose = llResults.targetingResults.getBotPose3d_wpiBlue();
+    //   } else {
+    //     pose = llResults.targetingResults.getBotPose3d_wpiRed();
+    //   }
+    //   poseXLog.append(pose.getX());
+    //   poseYLog.append(pose.getY());
+    //   poseRotationLog.append(pose.getRotation().getAngle());
+    // }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
